@@ -3,6 +3,12 @@
 #include <CL/cl.h>
 #include <memory>
 #include <vector>
+#include "feature.h"
+#ifdef TRACK_KERNEL_ARGUMENTS
+#include <cstdint>
+#include <algorithm>
+#include <map>
+#endif
 
 namespace Stat {
 
@@ -55,6 +61,11 @@ struct Enqueued {
   int queue_id;
 };
 
+/// Any object with a size
+struct Sizeable {
+  std::size_t size = 0;
+};
+
 
 // ******************************************************************
 // Properties wrapper. 
@@ -95,6 +106,76 @@ struct MemOperation: public AttributeSet<Identifiable<MemOperation>,
   bool blocking;
 };
 
+#ifdef TRACK_KERNEL_ARGUMENTS
+/// @brief Kernel argument.
+struct KernelArgument: public AttributeSet<Sizeable> {
+  enum class Type { MemObject, Data, Local /*, Sampler*/ } type;
+
+  KernelArgument(Type t, const size_t s)
+   : type(t)
+  { size = s; }
+  virtual ~KernelArgument(){}
+
+  virtual KernelArgument* clone() const = 0;
+};
+
+namespace Argument {
+namespace detail {
+template<typename T>
+struct Cloneable : public KernelArgument {
+  Cloneable(Type t, const size_t s)
+    : KernelArgument(t,s)
+  {}
+
+  KernelArgument* clone() const override 
+  { return new T(static_cast<const T&>(*this)); }
+};
+} 
+
+/// @brief kernel argument representing a memory object
+struct MemObject final: public detail::Cloneable<MemObject> {
+  int mem_object_id = -1;
+  MemObject(int id)
+    : detail::Cloneable<MemObject>{KernelArgument::Type::MemObject,sizeof(cl_mem)}
+    , mem_object_id{id}
+  {}
+
+  static bool classof(const KernelArgument *arg)
+  { return arg->type == KernelArgument::Type::MemObject; }
+};
+
+/// @brief Attribute representing raw data
+struct Data final: public detail::Cloneable<Data> { 
+  std::vector<std::uint8_t> data;
+  Data(const void *vptr, const size_t size)
+    : detail::Cloneable<Data>{KernelArgument::Type::Data,size}
+  {
+    const std::uint8_t *ptr = static_cast<const std::uint8_t*>(vptr);
+    data.resize(size);
+    std::copy(ptr, ptr+size, std::begin(data));
+  }
+
+  static bool classof(const KernelArgument *arg)
+  { return arg->type == KernelArgument::Type::Data; }
+};
+
+/// @brief Attribute representing local memory
+struct Local final: public detail::Cloneable<Local> {
+  Local(size_t size)
+    : detail::Cloneable<Local>{KernelArgument::Type::Local,size}
+  {}
+
+  static bool classof(const KernelArgument *arg)
+  { return arg->type == KernelArgument::Type::Local; }
+};
+} // namespace argument
+
+template <class To, class From>
+inline To* dyn_cast(const From &v) 
+{ return To::classof(v) ? static_cast<To*>(v) : nullptr; }
+#endif
+
+
 /// @brief An enqueued kernel instance.
 struct KernelInstance : public AttributeSet<Identifiable<KernelInstance>, 
                                             Enqueued __Timeable> {
@@ -103,6 +184,9 @@ struct KernelInstance : public AttributeSet<Identifiable<KernelInstance>,
   NDRange offset;
   NDRange global;
   NDRange local;
+#ifdef TRACK_KERNEL_ARGUMENTS
+  std::vector<std::unique_ptr<KernelArgument>> arguments;
+#endif
 };
 
 // ******************************************************************
@@ -128,6 +212,9 @@ struct Kernel final : public AttributeSet<Identifiable<Kernel> __RefCounted> {
   int program_id = 0; // FK
   std::string name;
   std::vector<KernelInstance> instances;
+#ifdef TRACK_KERNEL_ARGUMENTS
+  std::vector<std::unique_ptr<KernelArgument>> arguments;
+#endif
 };
 
 /// @brief cl_program stats.

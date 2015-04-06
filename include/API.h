@@ -9,6 +9,7 @@
 #include "Stat.h"
 #include "utils/ScopeGuard.h"
 #include "CL/cl.h"
+#include "feature.h"
 
 namespace He {
 

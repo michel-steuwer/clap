@@ -39,12 +39,14 @@ struct Profiler::Executor<API::clEnqueueNDRangeKernel> {
                             cl_uint num_events_in_wait_list,
                             const cl_event *event_wait_list,
                             cl_event *event)
-  {
+{
+   const auto &kernel_stat = get().kernels.at(kernel);
+
    Stat::KernelInstance inst;
    inst.offset = {work_dim,global_work_offset};
    inst.global = {work_dim,global_work_size};
    inst.local = {work_dim,local_work_size};
-   inst.kernel_id = get().kernels[kernel].id;
+   inst.kernel_id = kernel_stat.id;
    inst.queue_id = get().com_queues[command_queue].id;
 
     cl_int ret;
@@ -58,8 +60,13 @@ struct Profiler::Executor<API::clEnqueueNDRangeKernel> {
          event_wait_list,event);
     }
     
-    if(ret == CL_SUCCESS) 
-      get().kernels[kernel].instances.push_back(inst);
+    if(ret == CL_SUCCESS) { 
+#ifdef TRACK_KERNEL_ARGUMENTS
+      for(const auto& ptr : kernel_stat.arguments)
+        inst.arguments.emplace_back(ptr?ptr->clone():nullptr);
+#endif
+      get().kernels[kernel].instances.emplace_back(std::move(inst));
+    }
     return ret;
   }
 };

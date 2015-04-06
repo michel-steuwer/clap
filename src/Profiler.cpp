@@ -10,8 +10,6 @@
 
 using namespace He;
 
-#define CASESTR(X) case X: return #X
-
 template<typename T>
 using base_type = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
@@ -105,14 +103,61 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::NDRange& value) {
   return xml << xml::endtag();
 }
 
-xml::ostream& operator<< (xml::ostream& xml, const Stat::KernelInstance& obj) {
+#ifdef TRACK_KERNEL_ARGUMENTS
+xml::ostream& operator<< (xml::ostream& xml, const Stat::Argument::MemObject& value) {
   return xml 
+    << xml::attr("type") << "cl_mem" 
+    << xml::attr("cl_mem_id") << value.mem_object_id;
+}
+
+xml::ostream& operator<< (xml::ostream& xml, const Stat::Argument::Local& value) {
+  return xml 
+    << xml::attr("type") << "local_mem" 
+    << xml::attr("size") << value.size;
+}
+
+xml::ostream& operator<< (xml::ostream& xml, const Stat::Argument::Data& value) {
+  static const char dec2hex[17] = "0123456789abcdef";
+  xml 
+    << xml::attr("type") << "data" 
+    << xml::attr("size") << value.size
+    << xml::attr("value");
+  for(const auto c : value.data)
+    xml 
+      << dec2hex[(c >> 4) & 15]
+      << dec2hex[c & 15];
+  return xml;
+}
+#endif
+
+xml::ostream& operator<< (xml::ostream& xml, const Stat::KernelInstance& obj) {
+  xml 
     << xml::tag("instance")
     << (const base_type<decltype(obj)>::attribute_t&) obj
     << xml::tag("offset") << obj.offset << xml::endtag()
     << xml::tag("global") << obj.global << xml::endtag()
-    << xml::tag("local") << obj.local << xml::endtag()
-    << xml::endtag();
+    << xml::tag("local") << obj.local << xml::endtag();
+
+#ifdef TRACK_KERNEL_ARGUMENTS  
+  xml << xml::tag("arguments");
+  int i = 0;
+  for(const auto &argptr : obj.arguments) {
+    xml << xml::tag("argument") 
+        << xml::attr("index") << i++;
+    if(const auto arg = Stat::dyn_cast<Stat::Argument::MemObject>(argptr.get()))
+      xml << *arg;
+    else if(const auto arg = Stat::dyn_cast<Stat::Argument::Local>(argptr.get()))
+      xml << *arg; 
+    else if(const auto arg = Stat::dyn_cast<Stat::Argument::Data>(argptr.get()))
+      xml << *arg;
+    else
+      xml << xml::attr("type") << "unknown";
+    xml << xml::endtag();
+  }
+  xml << xml::endtag();
+#endif
+
+  return xml << xml::endtag();
 }
 
 xml::ostream& operator<< (xml::ostream& xml, const Stat::Kernel& kernel) {

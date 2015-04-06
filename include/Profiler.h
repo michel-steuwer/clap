@@ -7,6 +7,7 @@
 #endif
 #include "Stat.h"
 #include "API.h"
+#include "feature.h"
 
 namespace He {
 
@@ -80,6 +81,7 @@ struct Profiler::Executor {
 #include "Spec/refcount.inc"
 #endif
 #include "Spec/compiler.inc"
+#include "Spec/misc.inc"
 
 } // namespace He
 

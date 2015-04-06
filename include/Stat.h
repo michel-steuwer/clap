@@ -1,15 +1,14 @@
 #pragma once
 
+#ifdef TRACK_KERNEL_ARGUMENTS
+#include <cstdint>
+#include <algorithm>
+#endif
+
 #include <CL/cl.h>
 #include <memory>
 #include <vector>
 #include "feature.h"
-#ifdef TRACK_KERNEL_ARGUMENTS
-#include <cstdint>
-#include <algorithm>
-#include <map>
-#endif
-
 namespace Stat {
 
 // ******************************************************************

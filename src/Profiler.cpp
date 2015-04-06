@@ -2,6 +2,7 @@
 #include <ctime>
 #include <cassert>
 #include <fstream>
+#include <iostream>
 #include <iomanip>
 #include <cstdlib>
 #include <type_traits>

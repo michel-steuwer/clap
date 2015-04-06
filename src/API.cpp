@@ -2,6 +2,7 @@ extern "C" {
 #include <dlfcn.h>
 }
 #include <API.h>
+#include <iostream>
 
 using namespace He;
 

@@ -1,14 +1,13 @@
 #pragma once
 
-#include <type_traits>
 #include <tuple>
-#include <iostream>
 #include <chrono>
 #include <array>
 
+#include "CL/cl.h"
+
 #include "Stat.h"
 #include "utils/ScopeGuard.h"
-#include "CL/cl.h"
 #include "feature.h"
 
 namespace He {
@@ -72,7 +71,7 @@ struct API {
 
   /// @brief API call sink
   template<API::Fct fct, typename ... Args>
-  static API::return_t<fct> exec(Args&&... args); 
+  static inline API::return_t<fct> exec(Args&&... args); 
 };
 
 // Define type traits for the API types
@@ -89,7 +88,7 @@ struct API {
 
 // Sink: time and forward
 template<API::Fct fct, typename ... Args>
-API::return_t<fct> API::exec(Args&&... args) 
+inline API::return_t<fct> API::exec(Args&&... args) 
 {
 #ifdef TRACK_API_CALLS
   // start timer

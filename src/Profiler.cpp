@@ -6,22 +6,24 @@
 #include <iomanip>
 #include <cstdlib>
 #include <type_traits>
+
 #include "Formatter/XML.h"
 #include "utils/Enums.h"
+#include "utils/Casting.h"
 
 using namespace He;
 
 template<typename T>
 using base_type = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 
-using namespace He;
-
 // xml serialization of Stat objects
+
+// forward declarations
 template<typename K, typename V>
-xml::ostream& operator<< (xml::ostream& xml, const std::map<K,V>& value);
+xml::ostream& operator<< (xml::ostream&, const std::map<K,V>&);
   
 template<typename V>
-xml::ostream& operator<< (xml::ostream& xml, const std::vector<V>& value);
+xml::ostream& operator<< (xml::ostream&, const std::vector<V>&);
 
 // OpenCL object
 xml::ostream& operator<< (xml::ostream& xml, const cl_event event) {
@@ -40,7 +42,6 @@ xml::ostream& operator<< (xml::ostream& xml, const cl_event event) {
     << xml::attr("start") << start
     << xml::attr("end") << end;
 }
-
 
 // Attributes serialization
 template<typename T>
@@ -129,6 +130,16 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::Argument::Data& value) 
       << dec2hex[c & 15];
   return xml;
 }
+
+xml::ostream& operator<< (xml::ostream& xml, const Stat::KernelArgument& value) {
+  using namespace Stat::Argument;
+  if(!downcast_switch(&value)(
+    [&](const MemObject* arg) { xml << *arg; },
+    [&](const Local* arg)     { xml << *arg; },
+    [&](const Data* arg)      { xml << *arg; }))
+    xml << "unknown";
+  return xml;
+}
 #endif
 
 xml::ostream& operator<< (xml::ostream& xml, const Stat::KernelInstance& obj) {
@@ -144,16 +155,8 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::KernelInstance& obj) {
   int i = 0;
   for(const auto &argptr : obj.arguments) {
     xml << xml::tag("argument") 
-        << xml::attr("index") << i++;
-    if(const auto arg = Stat::dyn_cast<Stat::Argument::MemObject>(argptr.get()))
-      xml << *arg;
-    else if(const auto arg = Stat::dyn_cast<Stat::Argument::Local>(argptr.get()))
-      xml << *arg; 
-    else if(const auto arg = Stat::dyn_cast<Stat::Argument::Data>(argptr.get()))
-      xml << *arg;
-    else
-      xml << xml::attr("type") << "unknown";
-    xml << xml::endtag();
+        << xml::attr("index") << i++ << *(argptr.get())
+        << xml::endtag();
   }
   xml << xml::endtag();
 #endif
@@ -233,6 +236,9 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::Program& obj) {
   return xml
     << xml::tag("program")
     << xml::attr("build_options") << obj.build_options
+#ifdef TRACK_PROGRAMS
+    << xml::attr("hash") << obj.hash
+#endif
     << (const base_type<decltype(obj)>::attribute_t&) obj
     << xml::endtag();
 }
@@ -289,6 +295,8 @@ void Profiler::dumpLogs()
 
   xml::ostream xml = {logfile.is_open()?logfile:std::cout};
   xml << xml::tag("profile") << xml::attr("when") << mbstr
+      << xml::attr("version") << PROFILER_VERSION_MAJOR << '.'
+      << PROFILER_VERSION_MINOR << '.' << PROFILER_VERSION_PATCH
       << xml::tag("devices") << devices << xml::endtag()
       << xml::tag("contexts") << contexts << xml::endtag()
       << xml::tag("queues") << com_queues << xml::endtag()

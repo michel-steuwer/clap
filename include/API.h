@@ -8,28 +8,10 @@
 
 #include "Stat.h"
 #include "utils/ScopeGuard.h"
+#include "utils/function_traits.h"
 #include "feature.h"
 
 namespace He {
-
-namespace detail {
-// Helper struct to extract function traits
-template <typename T>
-struct function_traits;
-
-template <typename Ret, typename... Args>
-struct function_traits<Ret(*)(Args...)> {
-  using result_t = Ret;
-  
-  enum { nargs = sizeof...(Args) };
-  
-  template <size_t i>
-  struct arg {
-    typedef typename std::tuple_element<i, std::tuple<Args...>>::type type;
-  };
-};
-} // namespace detail
-
 /**
  * API and vendor implementation forward class.
  * Defines the prototypes of the OpenCL API functions and get pointers on the

@@ -1,13 +1,18 @@
 #pragma once
 
 #include <map>
+#include "Stat.h"
+#include "API.h"
+#include "feature.h"
+
 #ifdef DEBUG_TRACK_OVERHEAD
 #include <chrono>
 #include "utils/ScopeGuard.h"
 #endif
-#include "Stat.h"
-#include "API.h"
-#include "feature.h"
+
+#ifdef TRACK_PROGRAMS
+#include "utils/hash.h"
+#endif
 
 namespace He {
 

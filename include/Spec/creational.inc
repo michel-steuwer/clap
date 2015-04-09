@@ -100,4 +100,43 @@ struct Profiler::Executor<API::clCreateCommandQueue> {
   }
 };
 
+#ifdef TRACK_PROGRAMS
+template<>
+struct Profiler::Executor<API::clCreateProgramWithSource> {
+  static inline cl_program exec( cl_context context ,
+                                 cl_uint count ,
+                                 const char **strings ,
+                                 const size_t *lengths ,
+                                 cl_int *errcode_ret )
+  {
+    cl_int err;
+    auto ret = API::exec<API::clCreateProgramWithSource>
+      (context,count,strings,lengths,&err);
+    if(errcode_ret != nullptr)
+      *errcode_ret = err;
+
+    if(err == CL_SUCCESS) {
+      std::string source;
+      if(lengths){
+        std::size_t buf_size = 0;
+        for(unsigned i = 0; i < count; ++i)
+          buf_size+=lengths[i];
+
+        source.resize(buf_size);
+        char *ptr = &source[0];
+
+        for(unsigned i = 0; i < count; ++i)
+          ptr = std::copy(strings[i], strings[i]+lengths[i], ptr);
+      }
+      else {
+        for(unsigned i = 0; i < count; ++i)
+          source += strings[i];
+      }
+      using namespace He::hashing::sha1;
+      get().programs[ret].hash = hash((void*)source.data(), source.length());
+    }
+    return ret;
+  }
+};
+#endif
 

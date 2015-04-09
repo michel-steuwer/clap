@@ -1,4 +1,5 @@
 #!/usr/bin/python3.3
+# Quick script to plough through all config options
 import itertools as it
 import subprocess as sp
 import os,sys,getopt,time
@@ -17,12 +18,10 @@ def build(info,threaded,path):
   command = 'cmake ' + info.config + ' ' + path + ' && make -j4'
   if threaded:
     dirpath = tempfile.mkdtemp()
-    print('Compiling in ' + dirpath)
     os.chdir(dirpath)
   ts = time.time()
   info.ret = sp.call(command, shell=True)
-  te = time.time()
-  info.time = te - ts
+  info.time = time.time() - ts
   if info.ret != 0:
     print('build failed for: ' + info.config)
   if threaded:
@@ -30,6 +29,7 @@ def build(info,threaded,path):
   return info
 
 def main(argv):
+  # dictionary of all options
   options={
     'CMAKE_CXX_COMPILER':[
       '${HOME}/local/compilers/gcc/latest/bin/g++',
@@ -39,9 +39,11 @@ def main(argv):
     'TRACK_API_CALLS':['ON','OFF'],
     'TRACK_EVENTS':['ON','OFF'],
     'TRACK_REFCOUNT':['ON','OFF'],
-    'TRACK_KERNEL_ARGUMENTS':['ON','OFF']
+    'TRACK_KERNEL_ARGUMENTS':['ON','OFF'],
+    'TRACK_PROGRAMS':['ON','OFF']
     } 
 
+  # option parsing
   try:
      opts, args = getopt.getopt(argv,"atp:,[abort_on_error,threaded,path:]")
   except getopt.GetoptError:
@@ -61,17 +63,13 @@ def main(argv):
       path = arg
   print('path is : ' + path)
 
+  # generate all combinations
   keylist = sorted(options.keys())
   combinations = [' '.join(['-D%s=%s' % p for p in zip(keylist, prod)]) 
       for prod in it.product(*(options[varName] for varName in keylist))]
+  infos = [BuildInfo(optionset) for optionset in combinations]
 
-  threads = []
-  counter = 1
-
-  infos = []
-  for optionset in combinations:
-    infos.append(BuildInfo(optionset))
-
+  # build all configs
   if threaded:
     executor = concurrent.futures.ProcessPoolExecutor(max_workers=6)
     futures = [executor.submit(build,info,threaded,path) for info in infos]

@@ -8,7 +8,9 @@
 #include <CL/cl.h>
 #include <memory>
 #include <vector>
+
 #include "feature.h"
+#include "utils/Casting.h"
 namespace Stat {
 
 // ******************************************************************
@@ -16,8 +18,7 @@ namespace Stat {
 
 /// @brief Any object with a unique identifier
 template <typename T>
-struct Identifiable
-{
+struct Identifiable {
   static int count;
   int id;
   Identifiable() { id = ++count; }  
@@ -45,10 +46,10 @@ struct RefCounted {
 struct Timeable {
   cl_event _event = nullptr;
   bool forced_event = false;
-  int queued = 0;
-  int submit = 0;
-  int start = 0;
-  int end = 0;
+  long queued = 0;
+  long submit = 0;
+  long start = 0;
+  long end = 0;
 };
 # define __Timeable , Timeable
 #else
@@ -168,10 +169,6 @@ struct Local final: public detail::Cloneable<Local> {
   { return arg->type == KernelArgument::Type::Local; }
 };
 } // namespace argument
-
-template <class To, class From>
-inline To* dyn_cast(const From &v) 
-{ return To::classof(v) ? static_cast<To*>(v) : nullptr; }
 #endif
 
 
@@ -219,6 +216,9 @@ struct Kernel final : public AttributeSet<Identifiable<Kernel> __RefCounted> {
 /// @brief cl_program stats.
 struct Program final : public AttributeSet<Identifiable<Program> __RefCounted> {
   std::string build_options;
+#ifdef TRACK_PROGRAMS
+  std::string hash;
+#endif
 };
 
 /// @brief cl_command_queue stats.

@@ -2,7 +2,8 @@
 #include <cstdint>
 #include <cstring>
 
-namespace he {
+namespace He {
+namespace hashing {
 namespace sha1 {
 namespace detail {
   constexpr std::uint32_t rol(const std::uint32_t value, const std::uint32_t steps)
@@ -95,4 +96,5 @@ std::string hash(const void* src, const size_t length)
   return hex;
 }
 } // namespace sha1
+} // namespace hashing
 } // namespace he

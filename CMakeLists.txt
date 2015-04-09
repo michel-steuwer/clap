@@ -42,6 +42,12 @@ if(TRACK_KERNEL_ARGUMENTS)
   #define TRACK_KERNEL_ARGUMENTS")
 endif()
 
+option(TRACK_PROGRAMS "Track program sources or binaries." OFF)
+if(TRACK_PROGRAMS)
+  set(FEATURES "${FEATURES}
+  #define TRACK_PROGRAMS")
+endif()
+
 configure_file(include/features.h.in include/feature.h)
 
 ADD_DEFINITIONS(-D_GNU_SOURCE)

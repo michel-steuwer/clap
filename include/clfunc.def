@@ -11,7 +11,9 @@ CLFUNC(clGetContextInfo)
 CLFUNC(clRetainCommandQueue)
 CLFUNC(clReleaseCommandQueue)
 CLFUNC(clGetCommandQueueInfo)
-//CLFUNC(clSetCommandQueueProperty)
+#ifndef CL_VERSION_1_1
+CLFUNC(clSetCommandQueueProperty)
+#endif
 CLFUNC(clCreateBuffer)
 CLFUNC(clRetainMemObject)
 CLFUNC(clReleaseMemObject)

@@ -32,8 +32,8 @@ def build(info,threaded,path):
 def main(argv):
   options={
     'CMAKE_CXX_COMPILER':[
-      '/home/s0841430/local/bin/g++',
-      '/home/s0841430/llvm/trunk/bin/clang++'
+      '${HOME}/local/compilers/gcc/latest/bin/g++',
+      '${HOME}/local/compilers/clang/latest/bin/clang++'
     ],
     'DEBUG_TRACK_OVERHEAD':['ON','OFF'],
     'TRACK_API_CALLS':['ON','OFF'],

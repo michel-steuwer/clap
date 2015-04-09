@@ -95,7 +95,7 @@ clGetCommandQueueInfo(cl_command_queue command_queue,
       param_value_size_ret);
 }
 
-/*
+#if !defined(CL_VERSION_1_1)
 extern "C"
 [[gnu::visibility("default")]]
 CL_API_ENTRY cl_int CL_API_CALL
@@ -109,7 +109,7 @@ properties,
 enable,
 old_properties);
 }
-*/
+#endif
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_mem CL_API_CALL
 clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size,

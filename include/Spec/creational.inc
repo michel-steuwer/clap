@@ -7,7 +7,7 @@ struct Profiler::Executor<API::clCreateKernel> {
   {
     auto ret = API::exec<API::clCreateKernel>(program, kernel_name, errcode_ret);
     get().kernels[ret].name = kernel_name;
-    get().kernels[ret].program_id = get().programs[program].id;
+    get().kernels[ret].program_id = program;
     return ret;
   }
 };
@@ -17,13 +17,19 @@ struct Profiler::Executor<API::clCreateBuffer> {
   static inline cl_mem exec(cl_context context, cl_mem_flags flags, 
                             size_t size, void *host_ptr, cl_int *errcode_ret)
   {
+    cl_int _err;
     auto ret = API::getVendorImpl<API::clCreateBuffer>()
-      (context,flags,size,host_ptr,errcode_ret);
-    Stat::Memory obj;
-    obj.type = Stat::Memory::Type::Buffer;
-    obj.size = size;
-    obj.flags = flags;
-    get().memobjs[ret] = obj;
+      (context,flags,size,host_ptr,&_err);
+    if(errcode_ret != nullptr)
+      *errcode_ret = _err;
+
+    if(_err == CL_SUCCESS) {
+      Stat::Memory obj;
+      obj.type = Stat::Memory::Type::Buffer;
+      obj.size = size;
+      obj.flags = flags;
+      get().memobjs[ret] = obj;
+    }
     return ret;
   }
 };
@@ -37,16 +43,22 @@ struct Profiler::Executor<API::clCreateContext> {
                                 void *user_data,
                                 cl_int *err)
   {
+    cl_int _err;
     auto ret = API::getVendorImpl<API::clCreateContext>()
-      (properties, num_devices, devices, pfn_notify, user_data, err);
-    for(unsigned int i = 0; i < num_devices; ++i) {
-      auto _clGetDeviceInfo = API::getVendorImpl<API::clGetDeviceInfo>();
-      std::string name;
-      size_t length = 0;
-      _clGetDeviceInfo(const_cast<cl_device_id>(devices[i]),CL_DEVICE_NAME,0,nullptr,&length);
-      name.resize(length+1);
-      _clGetDeviceInfo(const_cast<cl_device_id>(devices[i]),CL_DEVICE_NAME,length,&name[0],nullptr);
-      get().devices[devices[i]].name = std::move(name);
+      (properties, num_devices, devices, pfn_notify, user_data, &_err);
+    if(err != nullptr) 
+      *err = _err; 
+
+    if(_err == CL_SUCCESS) {
+      for(unsigned int i = 0; i < num_devices; ++i) {
+        auto _clGetDeviceInfo = API::getVendorImpl<API::clGetDeviceInfo>();
+        std::string name;
+        size_t length = 0;
+        _clGetDeviceInfo(const_cast<cl_device_id>(devices[i]),CL_DEVICE_NAME,0,nullptr,&length);
+        name.resize(length+1);
+        _clGetDeviceInfo(const_cast<cl_device_id>(devices[i]),CL_DEVICE_NAME,length,&name[0],nullptr);
+        get().devices[devices[i]].name = std::move(name);
+      }
     }
     return ret;
   }
@@ -60,24 +72,29 @@ struct Profiler::Executor<API::clCreateContextFromType> {
                                 void *user_data, 
                                 cl_int *err)
   {
+    cl_int _err; 
     auto ret = API::getVendorImpl<API::clCreateContextFromType>()
-      (properties,device_type,pfn_notify,user_data,err);
+      (properties,device_type,pfn_notify,user_data,&_err);
+    if(err != nullptr)
+      *err = _err;
 
-    // get device list
-    size_t ret_size = 0;
-    API::exec<API::clGetContextInfo>
-      (ret,CL_CONTEXT_DEVICES,0,nullptr,&ret_size);
-    std::vector<cl_device_id> devs(ret_size/sizeof(cl_device_id));
-    API::getVendorImpl<API::clGetContextInfo>()
-      (ret,CL_CONTEXT_DEVICES,ret_size,&devs[0],nullptr);
-    for(auto dev : devs) {
-      auto _clGetDeviceInfo = API::getVendorImpl<API::clGetDeviceInfo>();
-      std::string name;
-      size_t length = 0;
-      _clGetDeviceInfo(dev,CL_DEVICE_NAME,0,nullptr,&length);
-      name.resize(length+1);
-      _clGetDeviceInfo(dev,CL_DEVICE_NAME,length,&name[0],nullptr);
-      get().devices[dev].name = std::move(name);
+    if(_err == CL_SUCCESS) { 
+      // get device list
+      size_t ret_size = 0;
+      API::exec<API::clGetContextInfo>
+        (ret,CL_CONTEXT_DEVICES,0,nullptr,&ret_size);
+      std::vector<cl_device_id> devs(ret_size/sizeof(cl_device_id));
+      API::getVendorImpl<API::clGetContextInfo>()
+        (ret,CL_CONTEXT_DEVICES,ret_size,&devs[0],nullptr);
+      for(auto dev : devs) {
+        auto _clGetDeviceInfo = API::getVendorImpl<API::clGetDeviceInfo>();
+        std::string name;
+        size_t length = 0;
+        _clGetDeviceInfo(dev,CL_DEVICE_NAME,0,nullptr,&length);
+        name.resize(length+1);
+        _clGetDeviceInfo(dev,CL_DEVICE_NAME,length,&name[0],nullptr);
+        get().devices[dev].name = std::move(name);
+      }
     }
     return ret;
   }
@@ -92,16 +109,16 @@ struct Profiler::Executor<API::clCreateCommandQueue> {
                                       cl_int *errcode_ret)
   {
     // make sure the command queue has profiling enabled
-    cl_int err;
+    cl_int _err;
     auto ret = API::exec<API::clCreateCommandQueue>
-      (context, device, prop | CL_QUEUE_PROFILING_ENABLE, &err);
+      (context, device, prop | CL_QUEUE_PROFILING_ENABLE, &_err);
     if(errcode_ret != nullptr)
-      *errcode_ret = err;
+      *errcode_ret = _err;
 
-    if(err == CL_SUCCESS) {
+    if(_err == CL_SUCCESS) {
       auto &pod = get().com_queues[ret];
       pod.properties = prop;
-      pod.device_id = get().devices[device].id;
+      pod.device_id = device;
       return ret;
     }
     return ret;
@@ -121,16 +138,16 @@ struct Profiler::Executor<API::clCreateCommandQueueWithProperties> {
     // TODO(tlutz): how do I query the default value of a command queue?
     cl_queue_properties _prop = prop ? *prop | CL_QUEUE_PROFILING_ENABLE : CL_QUEUE_PROFILING_ENABLE;
 
-    cl_int err; 
+    cl_int _err; 
     auto ret = API::exec<API::clCreateCommandQueueWithProperties>
-      (context, device, &_prop, &err);
+      (context, device, &_prop, &_err);
     if(errcode_ret != nullptr) 
-      *errcode_ret = err;
+      *errcode_ret = _err;
 
-    if(err == CL_SUCCESS) {
+    if(_err == CL_SUCCESS) {
       auto &pod = get().com_queues[ret];
       pod.properties = prop?*prop:0;
-      pod.device_id = get().devices[device].id;
+      pod.device_id = device;
       return ret;
     }
     return ret;

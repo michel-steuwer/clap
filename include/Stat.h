@@ -58,7 +58,7 @@ struct Timeable {
 
 /// Any object in a command queue
 struct Enqueued {
-  int queue_id;
+  cl_command_queue queue_id;
 };
 
 /// Any object with a size
@@ -176,7 +176,7 @@ struct Local final: public detail::Cloneable<Local> {
 struct KernelInstance : public AttributeSet<Identifiable<KernelInstance>, 
                                             Enqueued __Timeable> {
   /// @brief Kernel ID of the launched kernel (FK)
-  int kernel_id = -1;
+  cl_kernel kernel_id = nullptr;
   NDRange offset;
   NDRange global;
   NDRange local;
@@ -205,7 +205,7 @@ struct Memory final : public AttributeSet<Identifiable<Memory> __RefCounted > {
 
 /// @brief cl_kernel stats.
 struct Kernel final : public AttributeSet<Identifiable<Kernel> __RefCounted> {
-  int program_id = 0; // FK
+  cl_program program_id = nullptr; // FK
   std::string name;
   std::vector<KernelInstance> instances;
 #ifdef TRACK_KERNEL_ARGUMENTS
@@ -223,7 +223,7 @@ struct Program final : public AttributeSet<Identifiable<Program> __RefCounted> {
 
 /// @brief cl_command_queue stats.
 struct CommandQueue final : public AttributeSet<Identifiable<CommandQueue> __RefCounted> {
-  int device_id = -1; // FK
+  cl_device_id device_id = nullptr; // FK
   cl_command_queue_properties properties;
 };
 

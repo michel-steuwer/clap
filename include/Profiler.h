@@ -41,6 +41,19 @@ struct Profiler {
   /// @brief Log dump, triggered during static storage cleanup
   void dumpLogs();
 
+  inline const Stat::Device& getDevice(cl_device_id id) const 
+  { return devices.at(id); } 
+
+  inline const Stat::Program& getProgram(cl_program id) const 
+  { return programs.at(id); }
+
+  inline const Stat::Kernel& getKernel(cl_kernel id) const
+  { return kernels.at(id); }
+
+  inline const Stat::CommandQueue& getCommandQueue(cl_command_queue id) const
+  { return com_queues.at(id); }
+
+
 private:
   /// @brief We need a helper struct to partially specialize the exec method
   template<API::Fct fct> struct Executor;

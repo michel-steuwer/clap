@@ -43,6 +43,19 @@ xml::ostream& operator<< (xml::ostream& xml, const cl_event event) {
     << xml::attr("end") << end;
 }
 
+xml::ostream& operator<< (xml::ostream& xml, const cl_device_id id) 
+{ return xml << xml::attr("device_id") << Profiler::get().getDevice(id).id; }
+
+xml::ostream& operator<< (xml::ostream& xml, const cl_program id) 
+{ return xml << xml::attr("program_id") << Profiler::get().getProgram(id).id; }
+
+xml::ostream& operator<< (xml::ostream& xml, const cl_kernel id) 
+{ return xml << xml::attr("kernel_id") << Profiler::get().getKernel(id).id; }
+
+xml::ostream& operator<< (xml::ostream& xml, const cl_command_queue id) 
+{ return xml << xml::attr("command_queue_id") << Profiler::get().getCommandQueue(id).id; }
+
+
 // Attributes serialization
 template<typename T>
 xml::ostream& operator<< (xml::ostream& xml, const Stat::Identifiable<T>& obj) {
@@ -50,7 +63,7 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::Identifiable<T>& obj) {
 }
 
 xml::ostream& operator<< (xml::ostream& xml, const Stat::Enqueued& obj) {
-  return xml << xml::attr("queue_id") << obj.queue_id;
+  return xml << obj.queue_id;
 }
 
 #ifdef TRACK_EVENTS
@@ -168,7 +181,7 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::Kernel& kernel) {
   return xml 
     << xml::tag("kernel") 
     << xml::attr("name") << kernel.name
-    << xml::attr("program_id") << kernel.program_id
+    << kernel.program_id
     << (const base_type<decltype(kernel)>::attribute_t&) kernel
     << xml::tag("instances") << kernel.instances << xml::endtag() 
     << xml::endtag();
@@ -219,7 +232,7 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::CommandQueue& obj) {
   return xml
     << xml::tag("queue")
     << xml::attr("properties") << he::Constant::cl_command_queue_properties{obj.properties}
-    << xml::attr("device_id") << obj.device_id
+    << obj.device_id
     << (const base_type<decltype(obj)>::attribute_t&) obj
     << xml::endtag();
 }

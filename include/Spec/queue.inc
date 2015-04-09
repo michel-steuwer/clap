@@ -40,14 +40,12 @@ struct Profiler::Executor<API::clEnqueueNDRangeKernel> {
                             const cl_event *event_wait_list,
                             cl_event *event)
 {
-   const auto &kernel_stat = get().kernels.at(kernel);
-
    Stat::KernelInstance inst;
    inst.offset = {work_dim,global_work_offset};
    inst.global = {work_dim,global_work_size};
    inst.local = {work_dim,local_work_size};
-   inst.kernel_id = kernel_stat.id;
-   inst.queue_id = get().com_queues[command_queue].id;
+   inst.kernel_id = kernel;
+   inst.queue_id = command_queue;
 
     cl_int ret;
     {
@@ -62,6 +60,7 @@ struct Profiler::Executor<API::clEnqueueNDRangeKernel> {
     
     if(ret == CL_SUCCESS) { 
 #ifdef TRACK_KERNEL_ARGUMENTS
+      const auto &kernel_stat = get().getKernel(kernel);
       for(const auto& ptr : kernel_stat.arguments)
         inst.arguments.emplace_back(ptr?ptr->clone():nullptr);
 #endif
@@ -86,7 +85,7 @@ struct Profiler::Executor<API::clEnqueueReadBuffer> {
     Stat::MemOperation op; 
     op.type = Stat::MemOperation::Type::Read;
     op.blocking = blocking_read;
-    op.queue_id = get().com_queues[command_queue].id;
+    op.queue_id = command_queue;
     
     cl_int ret;
     {
@@ -119,7 +118,7 @@ struct Profiler::Executor<API::clEnqueueWriteBuffer> {
     Stat::MemOperation op; 
     op.type = Stat::MemOperation::Type::Write;
     op.blocking = blocking;
-    op.queue_id = get().com_queues[command_queue].id;
+    op.queue_id = command_queue;
 
     cl_int ret;
     {

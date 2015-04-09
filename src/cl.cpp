@@ -95,7 +95,7 @@ clGetCommandQueueInfo(cl_command_queue command_queue,
       param_value_size_ret);
 }
 
-#if !defined(CL_VERSION_1_1)
+#if defined OPENCL_ALLOW_DEPRECATED || !defined CL_VERSION_1_1
 extern "C"
 [[gnu::visibility("default")]]
 CL_API_ENTRY cl_int CL_API_CALL
@@ -475,6 +475,7 @@ clEnqueueNativeKernel(cl_command_queue command_queue,
       args_mem_loc, num_events_in_wait_list, event_wait_list, event);
 }
 
+#if defined OPENCL_ALLOW_DEPRECATED || !defined CL_VERSION_2_0
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_command_queue
     CL_API_CALL
     clCreateCommandQueue(cl_context context, cl_device_id device,
@@ -499,6 +500,7 @@ clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel,
   return He::Profiler::exec<He::API::clEnqueueTask>(
       command_queue, kernel, num_events_in_wait_list, event_wait_list, event);
 }
+#endif
 
 #endif
 
@@ -585,6 +587,7 @@ clEnqueueCopyBufferRect(cl_command_queue command_queue, cl_mem src_buffer,
       num_events_in_wait_list, event_wait_list, event);
 }
 
+#if defined OPENCL_ALLOW_DEPRECATED || !defined CL_VERSION_1_2
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_mem CL_API_CALL
 clCreateImage2D(cl_context context, cl_mem_flags flags,
                 const cl_image_format *image_format, size_t image_width,
@@ -634,6 +637,7 @@ clGetExtensionFunctionAddress(const char *func_name)
     CL_API_SUFFIX__VERSION_1_1 {
   return He::Profiler::exec<He::API::clGetExtensionFunctionAddress>(func_name);
 }
+#endif
 
 #endif
 
@@ -837,14 +841,14 @@ clSetKernelExecInfo(cl_kernel kernel, cl_kernel_exec_info param_name,
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clEnqueueSVMFree(cl_command_queue command_queue, cl_uint num_svm_pointers,
-                 void *,
+                 void *svm_pointers[] ,
                  void(CL_CALLBACK *pfn_free_func)(cl_command_queue, cl_uint,
                                                   void *[], void *),
                  void *user_data, cl_uint num_events_in_wait_list,
                  const cl_event *event_wait_list,
                  cl_event *event) CL_API_SUFFIX__VERSION_2_0 {
   return He::Profiler::exec<He::API::clEnqueueSVMFree>(
-      command_queue, num_svm_pointers, svm_pointers[], pfn_free_func, user_data,
+      command_queue, num_svm_pointers, svm_pointers, pfn_free_func, user_data,
       num_events_in_wait_list, event_wait_list, event);
 }
 

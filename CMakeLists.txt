@@ -8,7 +8,7 @@ include_directories(include/)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 
 set(LIBRARY_NAME HeliumPP)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fvisibility=hidden") 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fvisibility=hidden -Wall -Wextra -pedantic") 
 
 set(FEATURES "")
 
@@ -46,6 +46,15 @@ option(TRACK_PROGRAMS "Track program sources or binaries." OFF)
 if(TRACK_PROGRAMS)
   set(FEATURES "${FEATURES}
   #define TRACK_PROGRAMS")
+endif()
+
+set(OPENCL_VERSION "1.2" CACHE STRING "OpenCL version")
+set_property(CACHE OPENCL_VERSION PROPERTY STRINGS 1.0 1.1 1.2 2.0)
+include_directories(common/khronos/OpenCL_${OPENCL_VERSION})
+
+option(OPENCL_ALLOW_DEPRECATED "Include deprecated functions in the profiler (default is false)." OFF)
+if(OPENCL_ALLOW_DEPRECATED)
+  add_definitions( -DCL_USE_DEPRECATED_OPENCL_1_0_APIS -DOPENCL_ALLOW_DEPRECATED )
 endif()
 
 configure_file(include/features.h.in include/feature.h)

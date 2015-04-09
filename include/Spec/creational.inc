@@ -83,6 +83,7 @@ struct Profiler::Executor<API::clCreateContextFromType> {
   }
 };
 
+#if defined OPENCL_ALLOW_DEPRECATED || !defined CL_VERSION_2_0
 template<>
 struct Profiler::Executor<API::clCreateCommandQueue> {
   static inline cl_command_queue exec(cl_context context,
@@ -91,14 +92,51 @@ struct Profiler::Executor<API::clCreateCommandQueue> {
                                       cl_int *errcode_ret)
   {
     // make sure the command queue has profiling enabled
+    cl_int err;
     auto ret = API::exec<API::clCreateCommandQueue>
-      (context, device, prop | CL_QUEUE_PROFILING_ENABLE, errcode_ret);
-    auto &pod = get().com_queues[ret];
-    pod.properties = prop;
-    pod.device_id = get().devices[device].id;
+      (context, device, prop | CL_QUEUE_PROFILING_ENABLE, &err);
+    if(errcode_ret != nullptr)
+      *errcode_ret = err;
+
+    if(err == CL_SUCCESS) {
+      auto &pod = get().com_queues[ret];
+      pod.properties = prop;
+      pod.device_id = get().devices[device].id;
+      return ret;
+    }
     return ret;
   }
 };
+#endif
+
+#ifdef CL_VERSION_2_0
+template<>
+struct Profiler::Executor<API::clCreateCommandQueueWithProperties> {
+  static inline cl_command_queue exec( cl_context context, 
+                                       cl_device_id device,
+                                       const cl_queue_properties *prop,
+                                       cl_int *errcode_ret)
+  {
+    // make sure the command queue has profiling enabled
+    // TODO(tlutz): how do I query the default value of a command queue?
+    cl_queue_properties _prop = prop ? *prop | CL_QUEUE_PROFILING_ENABLE : CL_QUEUE_PROFILING_ENABLE;
+
+    cl_int err; 
+    auto ret = API::exec<API::clCreateCommandQueueWithProperties>
+      (context, device, &_prop, &err);
+    if(errcode_ret != nullptr) 
+      *errcode_ret = err;
+
+    if(err == CL_SUCCESS) {
+      auto &pod = get().com_queues[ret];
+      pod.properties = prop?*prop:0;
+      pod.device_id = get().devices[device].id;
+      return ret;
+    }
+    return ret;
+  }
+};
+#endif
 
 #ifdef TRACK_PROGRAMS
 template<>

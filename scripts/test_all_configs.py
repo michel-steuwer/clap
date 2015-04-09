@@ -35,6 +35,10 @@ def main(argv):
       '${HOME}/local/compilers/gcc/latest/bin/g++',
       '${HOME}/local/compilers/clang/latest/bin/clang++'
     ],
+    'OPENCL_VERSION':[
+      '1.0','1.1','1.2','2.0'
+    ],
+    'OPENCL_ALLOW_DEPRECATED':['ON','OFF'],
     'DEBUG_TRACK_OVERHEAD':['ON','OFF'],
     'TRACK_API_CALLS':['ON','OFF'],
     'TRACK_EVENTS':['ON','OFF'],
@@ -68,6 +72,8 @@ def main(argv):
   combinations = [' '.join(['-D%s=%s' % p for p in zip(keylist, prod)]) 
       for prod in it.product(*(options[varName] for varName in keylist))]
   infos = [BuildInfo(optionset) for optionset in combinations]
+
+  print('Testing ' + str(len(combinations)) + ' combinations')
 
   # build all configs
   if threaded:

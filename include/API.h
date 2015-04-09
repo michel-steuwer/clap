@@ -5,6 +5,7 @@
 #include <array>
 
 #include "CL/cl.h"
+#include "CL/cl_deprecated.h"
 
 #include "Stat.h"
 #include "utils/ScopeGuard.h"

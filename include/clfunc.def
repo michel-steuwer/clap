@@ -11,7 +11,7 @@ CLFUNC(clGetContextInfo)
 CLFUNC(clRetainCommandQueue)
 CLFUNC(clReleaseCommandQueue)
 CLFUNC(clGetCommandQueueInfo)
-#ifndef CL_VERSION_1_1
+#if defined OPENCL_ALLOW_DEPRECATED || !defined CL_VERSION_1_1
 CLFUNC(clSetCommandQueueProperty)
 #endif
 CLFUNC(clCreateBuffer)
@@ -57,9 +57,11 @@ CLFUNC(clEnqueueMapImage)
 CLFUNC(clEnqueueUnmapMemObject)
 CLFUNC(clEnqueueNDRangeKernel)
 CLFUNC(clEnqueueNativeKernel)
+#if defined OPENCL_ALLOW_DEPRECATED || !defined CL_VERSION_2_0
 CLFUNC(clCreateCommandQueue)
 CLFUNC(clCreateSampler)
 CLFUNC(clEnqueueTask)
+#endif
 #endif
 
 #ifdef CL_VERSION_1_1
@@ -71,6 +73,7 @@ CLFUNC(clSetEventCallback)
 CLFUNC(clEnqueueReadBufferRect)
 CLFUNC(clEnqueueWriteBufferRect)
 CLFUNC(clEnqueueCopyBufferRect)
+#if defined OPENCL_ALLOW_DEPRECATED || !defined CL_VERSION_1_2
 CLFUNC(clCreateImage2D)
 CLFUNC(clCreateImage3D)
 CLFUNC(clEnqueueMarker)
@@ -78,6 +81,7 @@ CLFUNC(clEnqueueWaitForEvents)
 CLFUNC(clEnqueueBarrier)
 CLFUNC(clUnloadCompiler)
 CLFUNC(clGetExtensionFunctionAddress)
+#endif
 #endif
 
 #ifdef CL_VERSION_1_2

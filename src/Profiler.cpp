@@ -295,8 +295,20 @@ void Profiler::dumpLogs()
 
   xml::ostream xml = {logfile.is_open()?logfile:std::cout};
   xml << xml::tag("profile") << xml::attr("when") << mbstr
-      << xml::attr("version") << PROFILER_VERSION_MAJOR << '.'
+      << xml::attr("profiler_version") << PROFILER_VERSION_MAJOR << '.'
       << PROFILER_VERSION_MINOR << '.' << PROFILER_VERSION_PATCH
+      << xml::attr("ocl_version")
+#if defined CL_VERSION_2_0
+      << "2.0"
+#elif defined CL_VERSION_1_2
+      << "1.2"
+#elif defined CL_VERSION_1_1
+      << "1.1"
+#elif defined CL_VERSION_1_0
+      << "1.0"
+#else
+#error Cannot match OpenCL version
+#endif
       << xml::tag("devices") << devices << xml::endtag()
       << xml::tag("contexts") << contexts << xml::endtag()
       << xml::tag("queues") << com_queues << xml::endtag()

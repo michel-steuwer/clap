@@ -1,6 +1,6 @@
 // Creational API
 template<>
-struct Profiler::Executor<API::clCreateKernel> {
+struct Profiler::Hook<API::clCreateKernel> {
   static inline cl_kernel exec(cl_program  program,
                                const char *kernel_name,
                                cl_int *errcode_ret)
@@ -13,7 +13,7 @@ struct Profiler::Executor<API::clCreateKernel> {
 };
 
 template<>
-struct Profiler::Executor<API::clCreateBuffer> {
+struct Profiler::Hook<API::clCreateBuffer> {
   static inline cl_mem exec(cl_context context, cl_mem_flags flags, 
                             size_t size, void *host_ptr, cl_int *errcode_ret)
   {
@@ -35,7 +35,7 @@ struct Profiler::Executor<API::clCreateBuffer> {
 };
 
 template<>
-struct Profiler::Executor<API::clCreateContext> {
+struct Profiler::Hook<API::clCreateContext> {
   static inline cl_context exec(const cl_context_properties *properties,
                                 cl_uint num_devices,
                                 const cl_device_id *devices,
@@ -65,7 +65,7 @@ struct Profiler::Executor<API::clCreateContext> {
 };
 
 template<>
-struct Profiler::Executor<API::clCreateContextFromType> {
+struct Profiler::Hook<API::clCreateContextFromType> {
   static inline cl_context exec(const cl_context_properties *properties, 
                                 cl_device_type device_type,
                                 void(CL_CALLBACK *pfn_notify)(const char *, const void *, size_t, void *),
@@ -102,7 +102,7 @@ struct Profiler::Executor<API::clCreateContextFromType> {
 
 #if defined OPENCL_ALLOW_DEPRECATED || !defined CL_VERSION_2_0
 template<>
-struct Profiler::Executor<API::clCreateCommandQueue> {
+struct Profiler::Hook<API::clCreateCommandQueue> {
   static inline cl_command_queue exec(cl_context context,
                                       cl_device_id device,
                                       cl_command_queue_properties prop,
@@ -128,7 +128,7 @@ struct Profiler::Executor<API::clCreateCommandQueue> {
 
 #ifdef CL_VERSION_2_0
 template<>
-struct Profiler::Executor<API::clCreateCommandQueueWithProperties> {
+struct Profiler::Hook<API::clCreateCommandQueueWithProperties> {
   static inline cl_command_queue exec( cl_context context, 
                                        cl_device_id device,
                                        const cl_queue_properties *prop,
@@ -157,7 +157,7 @@ struct Profiler::Executor<API::clCreateCommandQueueWithProperties> {
 
 #ifdef TRACK_PROGRAMS
 template<>
-struct Profiler::Executor<API::clCreateProgramWithSource> {
+struct Profiler::Hook<API::clCreateProgramWithSource> {
   static inline cl_program exec( cl_context context ,
                                  cl_uint count ,
                                  const char **strings ,

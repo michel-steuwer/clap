@@ -1,5 +1,5 @@
 template<>
-struct Profiler::Executor<API::clBuildProgram> {
+struct Profiler::Hook<API::clBuildProgram> {
   static inline cl_int exec( cl_program program,
                              cl_uint num_devices,
                              const cl_device_id *device_list,

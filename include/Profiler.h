@@ -30,7 +30,7 @@ struct Profiler {
       API::profile[fct].total_time += std::chrono::duration<double>(end-start).count();
     }};
 #endif
-    return Executor<fct>::exec(std::forward<Args>(args)...);
+    return Hook<fct>::exec(std::forward<Args>(args)...);
   }
 
   ~Profiler();
@@ -56,7 +56,7 @@ struct Profiler {
 
 private:
   /// @brief We need a helper struct to partially specialize the exec method
-  template<API::Fct fct> struct Executor;
+  template<API::Fct fct> struct Hook;
   
   /// @brief List of kernels
   std::map<cl_kernel, Stat::Kernel> kernels;
@@ -84,7 +84,7 @@ private:
 
 // Default behavior: passthrough
 template<API::Fct fct>
-struct Profiler::Executor {
+struct Profiler::Hook {
   template<typename ... Args>
     static inline auto exec(Args&&... args) -> API::return_t<fct>
   {

@@ -1,6 +1,6 @@
 #ifdef TRACK_KERNEL_ARGUMENTS
 template<>
-struct Profiler::Executor<API::clSetKernelArg> {
+struct Profiler::Hook<API::clSetKernelArg> {
   static inline int exec( cl_kernel kernel,
                           cl_uint arg_index,
                           size_t arg_size,

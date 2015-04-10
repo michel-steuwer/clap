@@ -1,7 +1,7 @@
 // retain/release
 #define HELIUM_RETAIN_RELEASE(Func,Handle,Cont)         \
 template<>                                              \
-struct Profiler::Executor<API::clRetain ## Func> {      \
+struct Profiler::Hook<API::clRetain ## Func> {      \
   static inline cl_int exec(Handle obj) {               \
     auto ret = API::exec<API::clRetain ## Func>(obj);   \
     if(ret== CL_SUCCESS)                                \
@@ -10,7 +10,7 @@ struct Profiler::Executor<API::clRetain ## Func> {      \
   }                                                     \
 };                                                      \
 template<>                                              \
-struct Profiler::Executor<API::clRelease ## Func> {     \
+struct Profiler::Hook<API::clRelease ## Func> {     \
   static inline cl_int exec(Handle mem) {               \
     auto ret = API::exec<API::clRelease ## Func>(mem);  \
     if(ret== CL_SUCCESS)                                \

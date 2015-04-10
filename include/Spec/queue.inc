@@ -29,7 +29,7 @@ namespace {
 // Queue API
 
 template<>
-struct Profiler::Executor<API::clEnqueueNDRangeKernel> {
+struct Profiler::Hook<API::clEnqueueNDRangeKernel> {
   static inline cl_int exec(cl_command_queue command_queue,
                             cl_kernel kernel,
                             cl_uint work_dim,
@@ -71,7 +71,7 @@ struct Profiler::Executor<API::clEnqueueNDRangeKernel> {
 };
 
 template<> 
-struct Profiler::Executor<API::clEnqueueReadBuffer> {
+struct Profiler::Hook<API::clEnqueueReadBuffer> {
   static inline cl_int exec(cl_command_queue command_queue,
                             cl_mem buffer,
                             cl_bool blocking_read,
@@ -104,7 +104,7 @@ struct Profiler::Executor<API::clEnqueueReadBuffer> {
 };
 
 template<> 
-struct Profiler::Executor<API::clEnqueueWriteBuffer> {
+struct Profiler::Hook<API::clEnqueueWriteBuffer> {
   static inline cl_int exec(cl_command_queue command_queue,
                             cl_mem buffer,
                             cl_bool blocking,

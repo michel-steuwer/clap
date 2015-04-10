@@ -1,0 +1,4 @@
+Clap development team:
+----------------------
+
+Thibaut Lutz <clap.devteam@gmail.com>

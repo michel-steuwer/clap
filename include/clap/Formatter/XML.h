@@ -4,7 +4,7 @@
 #include  <string>
 #include  <sstream>
 
-namespace He {
+namespace clap {
 namespace xml {
 class ostream {
 public:

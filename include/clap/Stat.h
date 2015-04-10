@@ -9,8 +9,8 @@
 #include <memory>
 #include <vector>
 
-#include "feature.h"
-#include "utils/Casting.h"
+#include "clap/feature.h"
+#include "clap/utils/Casting.h"
 namespace Stat {
 
 // ******************************************************************

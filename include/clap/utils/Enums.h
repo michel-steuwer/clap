@@ -1,6 +1,6 @@
 #include <ostream>
 
-namespace he {
+namespace clap {
   namespace Constant {
     struct cl_error { const long int value; };
     struct cl_mem_flags { const long unsigned int value; };

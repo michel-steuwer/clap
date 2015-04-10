@@ -57,7 +57,7 @@ if(OPENCL_ALLOW_DEPRECATED)
   add_definitions( -DCL_USE_DEPRECATED_OPENCL_1_0_APIS -DOPENCL_ALLOW_DEPRECATED )
 endif()
 
-configure_file(include/features.h.in include/feature.h)
+configure_file(include/clap/features.h.in include/clap/feature.h)
 
 ADD_DEFINITIONS(-D_GNU_SOURCE)
 ADD_DEFINITIONS(-DVERBOSE)

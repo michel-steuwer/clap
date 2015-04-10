@@ -1,12 +1,13 @@
 // Auto-generated file: DO NOT EDIT
 
-#include "Profiler.h"
+#include "clap/Profiler.h"
+using namespace clap;
 
 #ifdef CL_VERSION_1_0
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clGetPlatformIDs(cl_uint num_entries, cl_platform_id *platforms,
                  cl_uint *num_platforms) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetPlatformIDs>(num_entries, platforms,
+  return Profiler::exec<API::clGetPlatformIDs>(num_entries, platforms,
                                                num_platforms);
 }
 
@@ -14,7 +15,7 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clGetPlatformInfo(cl_platform_id platform, cl_platform_info param_name,
                   size_t param_value_size, void *param_value,
                   size_t *param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetPlatformInfo>(platform, param_name,
+  return Profiler::exec<API::clGetPlatformInfo>(platform, param_name,
                                                 param_value_size, param_value,
                                                 param_value_size_ret);
 }
@@ -23,7 +24,7 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clGetDeviceIDs(cl_platform_id platform, cl_device_type device_type,
                cl_uint num_entries, cl_device_id *devices,
                cl_uint *num_devices) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetDeviceIDs>(platform, device_type, num_entries,
+  return Profiler::exec<API::clGetDeviceIDs>(platform, device_type, num_entries,
                                              devices, num_devices);
 }
 
@@ -31,7 +32,7 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clGetDeviceInfo(cl_device_id device, cl_device_info param_name,
                 size_t param_value_size, void *param_value,
                 size_t *param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetDeviceInfo>(
+  return Profiler::exec<API::clGetDeviceInfo>(
       device, param_name, param_value_size, param_value, param_value_size_ret);
 }
 
@@ -42,7 +43,7 @@ clCreateContext(const cl_context_properties *properties, cl_uint num_devices,
                                               size_t, void *),
                 void *user_data,
                 cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clCreateContext>(
+  return Profiler::exec<API::clCreateContext>(
       properties, num_devices, devices, pfn_notify, user_data, errcode_ret);
 }
 
@@ -51,38 +52,38 @@ clCreateContextFromType(
     const cl_context_properties *properties, cl_device_type device_type,
     void(CL_CALLBACK *pfn_notify)(const char *, const void *, size_t, void *),
     void *user_data, cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clCreateContextFromType>(
+  return Profiler::exec<API::clCreateContextFromType>(
       properties, device_type, pfn_notify, user_data, errcode_ret);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clRetainContext(cl_context context) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clRetainContext>(context);
+  return Profiler::exec<API::clRetainContext>(context);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clReleaseContext(cl_context context) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clReleaseContext>(context);
+  return Profiler::exec<API::clReleaseContext>(context);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clGetContextInfo(cl_context context, cl_context_info param_name,
                  size_t param_value_size, void *param_value,
                  size_t *param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetContextInfo>(
+  return Profiler::exec<API::clGetContextInfo>(
       context, param_name, param_value_size, param_value, param_value_size_ret);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clRetainCommandQueue(cl_command_queue command_queue)
     CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clRetainCommandQueue>(command_queue);
+  return Profiler::exec<API::clRetainCommandQueue>(command_queue);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clReleaseCommandQueue(cl_command_queue command_queue)
     CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clReleaseCommandQueue>(command_queue);
+  return Profiler::exec<API::clReleaseCommandQueue>(command_queue);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
@@ -90,7 +91,7 @@ clGetCommandQueueInfo(cl_command_queue command_queue,
                       cl_command_queue_info param_name, size_t param_value_size,
                       void *param_value,
                       size_t *param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetCommandQueueInfo>(
+  return Profiler::exec<API::clGetCommandQueueInfo>(
       command_queue, param_name, param_value_size, param_value,
       param_value_size_ret);
 }
@@ -104,7 +105,7 @@ clSetCommandQueueProperty(cl_command_queue               command_queue ,
                           cl_bool                         enable ,
                           cl_command_queue_properties *  old_properties )
 CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clSetCommandQueueProperty>(command_queue,
+  return Profiler::exec<API::clSetCommandQueueProperty>(command_queue,
 properties,
 enable,
 old_properties);
@@ -114,18 +115,18 @@ old_properties);
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_mem CL_API_CALL
 clCreateBuffer(cl_context context, cl_mem_flags flags, size_t size,
                void *host_ptr, cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clCreateBuffer>(context, flags, size, host_ptr,
+  return Profiler::exec<API::clCreateBuffer>(context, flags, size, host_ptr,
                                              errcode_ret);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clRetainMemObject(cl_mem memobj) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clRetainMemObject>(memobj);
+  return Profiler::exec<API::clRetainMemObject>(memobj);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clReleaseMemObject(cl_mem memobj) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clReleaseMemObject>(memobj);
+  return Profiler::exec<API::clReleaseMemObject>(memobj);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
@@ -133,7 +134,7 @@ clGetSupportedImageFormats(
     cl_context context, cl_mem_flags flags, cl_mem_object_type image_type,
     cl_uint num_entries, cl_image_format *image_formats,
     cl_uint *num_image_formats) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetSupportedImageFormats>(
+  return Profiler::exec<API::clGetSupportedImageFormats>(
       context, flags, image_type, num_entries, image_formats,
       num_image_formats);
 }
@@ -142,7 +143,7 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clGetMemObjectInfo(cl_mem memobj, cl_mem_info param_name,
                    size_t param_value_size, void *param_value,
                    size_t *param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetMemObjectInfo>(
+  return Profiler::exec<API::clGetMemObjectInfo>(
       memobj, param_name, param_value_size, param_value, param_value_size_ret);
 }
 
@@ -150,25 +151,25 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clGetImageInfo(cl_mem image, cl_image_info param_name, size_t param_value_size,
                void *param_value,
                size_t *param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetImageInfo>(
+  return Profiler::exec<API::clGetImageInfo>(
       image, param_name, param_value_size, param_value, param_value_size_ret);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clRetainSampler(cl_sampler sampler) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clRetainSampler>(sampler);
+  return Profiler::exec<API::clRetainSampler>(sampler);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clReleaseSampler(cl_sampler sampler) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clReleaseSampler>(sampler);
+  return Profiler::exec<API::clReleaseSampler>(sampler);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clGetSamplerInfo(cl_sampler sampler, cl_sampler_info param_name,
                  size_t param_value_size, void *param_value,
                  size_t *param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetSamplerInfo>(
+  return Profiler::exec<API::clGetSamplerInfo>(
       sampler, param_name, param_value_size, param_value, param_value_size_ret);
 }
 
@@ -176,7 +177,7 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_program CL_API_CALL
 clCreateProgramWithSource(cl_context context, cl_uint count,
                           const char **strings, const size_t *lengths,
                           cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clCreateProgramWithSource>(context, count, strings,
+  return Profiler::exec<API::clCreateProgramWithSource>(context, count, strings,
                                                         lengths, errcode_ret);
 }
 
@@ -186,19 +187,19 @@ clCreateProgramWithBinary(cl_context context, cl_uint num_devices,
                           const size_t *lengths, const unsigned char **binaries,
                           cl_int *binary_status,
                           cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clCreateProgramWithBinary>(
+  return Profiler::exec<API::clCreateProgramWithBinary>(
       context, num_devices, device_list, lengths, binaries, binary_status,
       errcode_ret);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clRetainProgram(cl_program program) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clRetainProgram>(program);
+  return Profiler::exec<API::clRetainProgram>(program);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clReleaseProgram(cl_program program) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clReleaseProgram>(program);
+  return Profiler::exec<API::clReleaseProgram>(program);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
@@ -206,7 +207,7 @@ clBuildProgram(cl_program program, cl_uint num_devices,
                const cl_device_id *device_list, const char *options,
                void(CL_CALLBACK *pfn_notify)(cl_program, void *),
                void *user_data) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clBuildProgram>(program, num_devices, device_list,
+  return Profiler::exec<API::clBuildProgram>(program, num_devices, device_list,
                                              options, pfn_notify, user_data);
 }
 
@@ -214,7 +215,7 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clGetProgramInfo(cl_program program, cl_program_info param_name,
                  size_t param_value_size, void *param_value,
                  size_t *param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetProgramInfo>(
+  return Profiler::exec<API::clGetProgramInfo>(
       program, param_name, param_value_size, param_value, param_value_size_ret);
 }
 
@@ -223,7 +224,7 @@ clGetProgramBuildInfo(cl_program program, cl_device_id device,
                       cl_program_build_info param_name, size_t param_value_size,
                       void *param_value,
                       size_t *param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetProgramBuildInfo>(
+  return Profiler::exec<API::clGetProgramBuildInfo>(
       program, device, param_name, param_value_size, param_value,
       param_value_size_ret);
 }
@@ -231,31 +232,31 @@ clGetProgramBuildInfo(cl_program program, cl_device_id device,
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_kernel CL_API_CALL
 clCreateKernel(cl_program program, const char *kernel_name,
                cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clCreateKernel>(program, kernel_name, errcode_ret);
+  return Profiler::exec<API::clCreateKernel>(program, kernel_name, errcode_ret);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clCreateKernelsInProgram(cl_program program, cl_uint num_kernels,
                          cl_kernel *kernels,
                          cl_uint *num_kernels_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clCreateKernelsInProgram>(
+  return Profiler::exec<API::clCreateKernelsInProgram>(
       program, num_kernels, kernels, num_kernels_ret);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clRetainKernel(cl_kernel kernel) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clRetainKernel>(kernel);
+  return Profiler::exec<API::clRetainKernel>(kernel);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clReleaseKernel(cl_kernel kernel) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clReleaseKernel>(kernel);
+  return Profiler::exec<API::clReleaseKernel>(kernel);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clSetKernelArg(cl_kernel kernel, cl_uint arg_index, size_t arg_size,
                const void *arg_value) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clSetKernelArg>(kernel, arg_index, arg_size,
+  return Profiler::exec<API::clSetKernelArg>(kernel, arg_index, arg_size,
                                              arg_value);
 }
 
@@ -263,7 +264,7 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clGetKernelInfo(cl_kernel kernel, cl_kernel_info param_name,
                 size_t param_value_size, void *param_value,
                 size_t *param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetKernelInfo>(
+  return Profiler::exec<API::clGetKernelInfo>(
       kernel, param_name, param_value_size, param_value, param_value_size_ret);
 }
 
@@ -272,7 +273,7 @@ clGetKernelWorkGroupInfo(
     cl_kernel kernel, cl_device_id device, cl_kernel_work_group_info param_name,
     size_t param_value_size, void *param_value,
     size_t *param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetKernelWorkGroupInfo>(
+  return Profiler::exec<API::clGetKernelWorkGroupInfo>(
       kernel, device, param_name, param_value_size, param_value,
       param_value_size_ret);
 }
@@ -280,25 +281,25 @@ clGetKernelWorkGroupInfo(
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clWaitForEvents(cl_uint num_events,
                 const cl_event *event_list) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clWaitForEvents>(num_events, event_list);
+  return Profiler::exec<API::clWaitForEvents>(num_events, event_list);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clGetEventInfo(cl_event event, cl_event_info param_name,
                size_t param_value_size, void *param_value,
                size_t *param_value_size_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetEventInfo>(
+  return Profiler::exec<API::clGetEventInfo>(
       event, param_name, param_value_size, param_value, param_value_size_ret);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clRetainEvent(cl_event event) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clRetainEvent>(event);
+  return Profiler::exec<API::clRetainEvent>(event);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clReleaseEvent(cl_event event) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clReleaseEvent>(event);
+  return Profiler::exec<API::clReleaseEvent>(event);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
@@ -306,18 +307,18 @@ clGetEventProfilingInfo(cl_event event, cl_profiling_info param_name,
                         size_t param_value_size, void *param_value,
                         size_t *param_value_size_ret)
     CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clGetEventProfilingInfo>(
+  return Profiler::exec<API::clGetEventProfilingInfo>(
       event, param_name, param_value_size, param_value, param_value_size_ret);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clFlush(cl_command_queue command_queue) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clFlush>(command_queue);
+  return Profiler::exec<API::clFlush>(command_queue);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clFinish(cl_command_queue command_queue) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clFinish>(command_queue);
+  return Profiler::exec<API::clFinish>(command_queue);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
@@ -326,7 +327,7 @@ clEnqueueReadBuffer(cl_command_queue command_queue, cl_mem buffer,
                     void *ptr, cl_uint num_events_in_wait_list,
                     const cl_event *event_wait_list,
                     cl_event *event) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clEnqueueReadBuffer>(
+  return Profiler::exec<API::clEnqueueReadBuffer>(
       command_queue, buffer, blocking_read, offset, size, ptr,
       num_events_in_wait_list, event_wait_list, event);
 }
@@ -337,7 +338,7 @@ clEnqueueWriteBuffer(cl_command_queue command_queue, cl_mem buffer,
                      const void *ptr, cl_uint num_events_in_wait_list,
                      const cl_event *event_wait_list,
                      cl_event *event) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clEnqueueWriteBuffer>(
+  return Profiler::exec<API::clEnqueueWriteBuffer>(
       command_queue, buffer, blocking_write, offset, size, ptr,
       num_events_in_wait_list, event_wait_list, event);
 }
@@ -348,7 +349,7 @@ clEnqueueCopyBuffer(cl_command_queue command_queue, cl_mem src_buffer,
                     size_t size, cl_uint num_events_in_wait_list,
                     const cl_event *event_wait_list,
                     cl_event *event) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clEnqueueCopyBuffer>(
+  return Profiler::exec<API::clEnqueueCopyBuffer>(
       command_queue, src_buffer, dst_buffer, src_offset, dst_offset, size,
       num_events_in_wait_list, event_wait_list, event);
 }
@@ -360,7 +361,7 @@ clEnqueueReadImage(cl_command_queue command_queue, cl_mem image,
                    void *ptr, cl_uint num_events_in_wait_list,
                    const cl_event *event_wait_list,
                    cl_event *event) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clEnqueueReadImage>(
+  return Profiler::exec<API::clEnqueueReadImage>(
       command_queue, image, blocking_read, origin, region, row_pitch,
       slice_pitch, ptr, num_events_in_wait_list, event_wait_list, event);
 }
@@ -373,7 +374,7 @@ clEnqueueWriteImage(cl_command_queue command_queue, cl_mem image,
                     cl_uint num_events_in_wait_list,
                     const cl_event *event_wait_list,
                     cl_event *event) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clEnqueueWriteImage>(
+  return Profiler::exec<API::clEnqueueWriteImage>(
       command_queue, image, blocking_write, origin, region, input_row_pitch,
       input_slice_pitch, ptr, num_events_in_wait_list, event_wait_list, event);
 }
@@ -385,7 +386,7 @@ clEnqueueCopyImage(cl_command_queue command_queue, cl_mem src_image,
                    cl_uint num_events_in_wait_list,
                    const cl_event *event_wait_list,
                    cl_event *event) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clEnqueueCopyImage>(
+  return Profiler::exec<API::clEnqueueCopyImage>(
       command_queue, src_image, dst_image, src_origin, dst_origin, region,
       num_events_in_wait_list, event_wait_list, event);
 }
@@ -397,7 +398,7 @@ clEnqueueCopyImageToBuffer(cl_command_queue command_queue, cl_mem src_image,
                            cl_uint num_events_in_wait_list,
                            const cl_event *event_wait_list,
                            cl_event *event) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clEnqueueCopyImageToBuffer>(
+  return Profiler::exec<API::clEnqueueCopyImageToBuffer>(
       command_queue, src_image, dst_buffer, src_origin, region, dst_offset,
       num_events_in_wait_list, event_wait_list, event);
 }
@@ -409,7 +410,7 @@ clEnqueueCopyBufferToImage(cl_command_queue command_queue, cl_mem src_buffer,
                            cl_uint num_events_in_wait_list,
                            const cl_event *event_wait_list,
                            cl_event *event) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clEnqueueCopyBufferToImage>(
+  return Profiler::exec<API::clEnqueueCopyBufferToImage>(
       command_queue, src_buffer, dst_image, src_offset, dst_origin, region,
       num_events_in_wait_list, event_wait_list, event);
 }
@@ -420,7 +421,7 @@ clEnqueueMapBuffer(cl_command_queue command_queue, cl_mem buffer,
                    size_t size, cl_uint num_events_in_wait_list,
                    const cl_event *event_wait_list, cl_event *event,
                    cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clEnqueueMapBuffer>(
+  return Profiler::exec<API::clEnqueueMapBuffer>(
       command_queue, buffer, blocking_map, map_flags, offset, size,
       num_events_in_wait_list, event_wait_list, event, errcode_ret);
 }
@@ -433,7 +434,7 @@ clEnqueueMapImage(cl_command_queue command_queue, cl_mem image,
                   cl_uint num_events_in_wait_list,
                   const cl_event *event_wait_list, cl_event *event,
                   cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clEnqueueMapImage>(
+  return Profiler::exec<API::clEnqueueMapImage>(
       command_queue, image, blocking_map, map_flags, origin, region,
       image_row_pitch, image_slice_pitch, num_events_in_wait_list,
       event_wait_list, event, errcode_ret);
@@ -444,7 +445,7 @@ clEnqueueUnmapMemObject(cl_command_queue command_queue, cl_mem memobj,
                         void *mapped_ptr, cl_uint num_events_in_wait_list,
                         const cl_event *event_wait_list,
                         cl_event *event) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clEnqueueUnmapMemObject>(
+  return Profiler::exec<API::clEnqueueUnmapMemObject>(
       command_queue, memobj, mapped_ptr, num_events_in_wait_list,
       event_wait_list, event);
 }
@@ -457,7 +458,7 @@ clEnqueueNDRangeKernel(cl_command_queue command_queue, cl_kernel kernel,
                        cl_uint num_events_in_wait_list,
                        const cl_event *event_wait_list,
                        cl_event *event) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clEnqueueNDRangeKernel>(
+  return Profiler::exec<API::clEnqueueNDRangeKernel>(
       command_queue, kernel, work_dim, global_work_offset, global_work_size,
       local_work_size, num_events_in_wait_list, event_wait_list, event);
 }
@@ -470,7 +471,7 @@ clEnqueueNativeKernel(cl_command_queue command_queue,
                       cl_uint num_events_in_wait_list,
                       const cl_event *event_wait_list,
                       cl_event *event) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clEnqueueNativeKernel>(
+  return Profiler::exec<API::clEnqueueNativeKernel>(
       command_queue, user_func, args, cb_args, num_mem_objects, mem_list,
       args_mem_loc, num_events_in_wait_list, event_wait_list, event);
 }
@@ -481,7 +482,7 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_command_queue
     clCreateCommandQueue(cl_context context, cl_device_id device,
                          cl_command_queue_properties properties,
                          cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clCreateCommandQueue>(context, device, properties,
+  return Profiler::exec<API::clCreateCommandQueue>(context, device, properties,
                                                    errcode_ret);
 }
 
@@ -489,7 +490,7 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_sampler CL_API_CALL
 clCreateSampler(cl_context context, cl_bool normalized_coords,
                 cl_addressing_mode addressing_mode, cl_filter_mode filter_mode,
                 cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clCreateSampler>(
+  return Profiler::exec<API::clCreateSampler>(
       context, normalized_coords, addressing_mode, filter_mode, errcode_ret);
 }
 
@@ -497,7 +498,7 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clEnqueueTask(cl_command_queue command_queue, cl_kernel kernel,
               cl_uint num_events_in_wait_list, const cl_event *event_wait_list,
               cl_event *event) CL_API_SUFFIX__VERSION_1_0 {
-  return He::Profiler::exec<He::API::clEnqueueTask>(
+  return Profiler::exec<API::clEnqueueTask>(
       command_queue, kernel, num_events_in_wait_list, event_wait_list, event);
 }
 #endif
@@ -510,7 +511,7 @@ clCreateSubBuffer(cl_mem buffer, cl_mem_flags flags,
                   cl_buffer_create_type buffer_create_type,
                   const void *buffer_create_info,
                   cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clCreateSubBuffer>(
+  return Profiler::exec<API::clCreateSubBuffer>(
       buffer, flags, buffer_create_type, buffer_create_info, errcode_ret);
 }
 
@@ -518,27 +519,27 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clSetMemObjectDestructorCallback(cl_mem memobj,
                                  void(CL_CALLBACK *pfn_notify)(cl_mem, void *),
                                  void *user_data) CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clSetMemObjectDestructorCallback>(
+  return Profiler::exec<API::clSetMemObjectDestructorCallback>(
       memobj, pfn_notify, user_data);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_event CL_API_CALL
 clCreateUserEvent(cl_context context,
                   cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clCreateUserEvent>(context, errcode_ret);
+  return Profiler::exec<API::clCreateUserEvent>(context, errcode_ret);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clSetUserEventStatus(cl_event event,
                      cl_int execution_status) CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clSetUserEventStatus>(event, execution_status);
+  return Profiler::exec<API::clSetUserEventStatus>(event, execution_status);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clSetEventCallback(cl_event event, cl_int command_exec_callback_type,
                    void(CL_CALLBACK *pfn_notify)(cl_event, cl_int, void *),
                    void *user_data) CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clSetEventCallback>(
+  return Profiler::exec<API::clSetEventCallback>(
       event, command_exec_callback_type, pfn_notify, user_data);
 }
 
@@ -551,7 +552,7 @@ clEnqueueReadBufferRect(cl_command_queue command_queue, cl_mem buffer,
                         void *ptr, cl_uint num_events_in_wait_list,
                         const cl_event *event_wait_list,
                         cl_event *event) CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clEnqueueReadBufferRect>(
+  return Profiler::exec<API::clEnqueueReadBufferRect>(
       command_queue, buffer, blocking_read, buffer_offset, host_offset, region,
       buffer_row_pitch, buffer_slice_pitch, host_row_pitch, host_slice_pitch,
       ptr, num_events_in_wait_list, event_wait_list, event);
@@ -566,7 +567,7 @@ clEnqueueWriteBufferRect(cl_command_queue command_queue, cl_mem buffer,
                          const void *ptr, cl_uint num_events_in_wait_list,
                          const cl_event *event_wait_list,
                          cl_event *event) CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clEnqueueWriteBufferRect>(
+  return Profiler::exec<API::clEnqueueWriteBufferRect>(
       command_queue, buffer, blocking_write, buffer_offset, host_offset, region,
       buffer_row_pitch, buffer_slice_pitch, host_row_pitch, host_slice_pitch,
       ptr, num_events_in_wait_list, event_wait_list, event);
@@ -581,7 +582,7 @@ clEnqueueCopyBufferRect(cl_command_queue command_queue, cl_mem src_buffer,
                         cl_uint num_events_in_wait_list,
                         const cl_event *event_wait_list,
                         cl_event *event) CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clEnqueueCopyBufferRect>(
+  return Profiler::exec<API::clEnqueueCopyBufferRect>(
       command_queue, src_buffer, dst_buffer, src_origin, dst_origin, region,
       src_row_pitch, src_slice_pitch, dst_row_pitch, dst_slice_pitch,
       num_events_in_wait_list, event_wait_list, event);
@@ -593,7 +594,7 @@ clCreateImage2D(cl_context context, cl_mem_flags flags,
                 const cl_image_format *image_format, size_t image_width,
                 size_t image_height, size_t image_row_pitch, void *host_ptr,
                 cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clCreateImage2D>(
+  return Profiler::exec<API::clCreateImage2D>(
       context, flags, image_format, image_width, image_height, image_row_pitch,
       host_ptr, errcode_ret);
 }
@@ -604,7 +605,7 @@ clCreateImage3D(cl_context context, cl_mem_flags flags,
                 size_t image_height, size_t image_depth, size_t image_row_pitch,
                 size_t image_slice_pitch, void *host_ptr,
                 cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clCreateImage3D>(
+  return Profiler::exec<API::clCreateImage3D>(
       context, flags, image_format, image_width, image_height, image_depth,
       image_row_pitch, image_slice_pitch, host_ptr, errcode_ret);
 }
@@ -612,30 +613,30 @@ clCreateImage3D(cl_context context, cl_mem_flags flags,
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clEnqueueMarker(cl_command_queue command_queue,
                 cl_event *event) CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clEnqueueMarker>(command_queue, event);
+  return Profiler::exec<API::clEnqueueMarker>(command_queue, event);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clEnqueueWaitForEvents(cl_command_queue command_queue, cl_uint num_events,
                        const cl_event *event_list) CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clEnqueueWaitForEvents>(command_queue, num_events,
+  return Profiler::exec<API::clEnqueueWaitForEvents>(command_queue, num_events,
                                                      event_list);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clEnqueueBarrier(cl_command_queue command_queue) CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clEnqueueBarrier>(command_queue);
+  return Profiler::exec<API::clEnqueueBarrier>(command_queue);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clUnloadCompiler(void) CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clUnloadCompiler>();
+  return Profiler::exec<API::clUnloadCompiler>();
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY void *CL_API_CALL
 clGetExtensionFunctionAddress(const char *func_name)
     CL_API_SUFFIX__VERSION_1_1 {
-  return He::Profiler::exec<He::API::clGetExtensionFunctionAddress>(func_name);
+  return Profiler::exec<API::clGetExtensionFunctionAddress>(func_name);
 }
 #endif
 
@@ -647,18 +648,18 @@ clCreateSubDevices(cl_device_id in_device,
                    const cl_device_partition_property *properties,
                    cl_uint num_devices, cl_device_id *out_devices,
                    cl_uint *num_devices_ret) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clCreateSubDevices>(
+  return Profiler::exec<API::clCreateSubDevices>(
       in_device, properties, num_devices, out_devices, num_devices_ret);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clRetainDevice(cl_device_id device) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clRetainDevice>(device);
+  return Profiler::exec<API::clRetainDevice>(device);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clReleaseDevice(cl_device_id device) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clReleaseDevice>(device);
+  return Profiler::exec<API::clReleaseDevice>(device);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_mem CL_API_CALL
@@ -666,7 +667,7 @@ clCreateImage(cl_context context, cl_mem_flags flags,
               const cl_image_format *image_format,
               const cl_image_desc *image_desc, void *host_ptr,
               cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clCreateImage>(context, flags, image_format,
+  return Profiler::exec<API::clCreateImage>(context, flags, image_format,
                                             image_desc, host_ptr, errcode_ret);
 }
 
@@ -674,7 +675,7 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_program CL_API_CALL
 clCreateProgramWithBuiltInKernels(
     cl_context context, cl_uint num_devices, const cl_device_id *device_list,
     const char *kernel_names, cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clCreateProgramWithBuiltInKernels>(
+  return Profiler::exec<API::clCreateProgramWithBuiltInKernels>(
       context, num_devices, device_list, kernel_names, errcode_ret);
 }
 
@@ -685,7 +686,7 @@ clCompileProgram(cl_program program, cl_uint num_devices,
                  const char **header_include_names,
                  void(CL_CALLBACK *pfn_notify)(cl_program, void *),
                  void *user_data) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clCompileProgram>(
+  return Profiler::exec<API::clCompileProgram>(
       program, num_devices, device_list, options, num_input_headers,
       input_headers, header_include_names, pfn_notify, user_data);
 }
@@ -696,14 +697,14 @@ clLinkProgram(cl_context context, cl_uint num_devices,
               cl_uint num_input_programs, const cl_program *input_programs,
               void(CL_CALLBACK *pfn_notify)(cl_program, void *),
               void *user_data, cl_int *errcode_ret) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clLinkProgram>(
+  return Profiler::exec<API::clLinkProgram>(
       context, num_devices, device_list, options, num_input_programs,
       input_programs, pfn_notify, user_data, errcode_ret);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clUnloadPlatformCompiler(cl_platform_id platform) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clUnloadPlatformCompiler>(platform);
+  return Profiler::exec<API::clUnloadPlatformCompiler>(platform);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
@@ -711,7 +712,7 @@ clGetKernelArgInfo(cl_kernel kernel, cl_uint arg_indx,
                    cl_kernel_arg_info param_name, size_t param_value_size,
                    void *param_value,
                    size_t *param_value_size_ret) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clGetKernelArgInfo>(kernel, arg_indx, param_name,
+  return Profiler::exec<API::clGetKernelArgInfo>(kernel, arg_indx, param_name,
                                                  param_value_size, param_value,
                                                  param_value_size_ret);
 }
@@ -722,7 +723,7 @@ clEnqueueFillBuffer(cl_command_queue command_queue, cl_mem buffer,
                     size_t size, cl_uint num_events_in_wait_list,
                     const cl_event *event_wait_list,
                     cl_event *event) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clEnqueueFillBuffer>(
+  return Profiler::exec<API::clEnqueueFillBuffer>(
       command_queue, buffer, pattern, pattern_size, offset, size,
       num_events_in_wait_list, event_wait_list, event);
 }
@@ -733,7 +734,7 @@ clEnqueueFillImage(cl_command_queue command_queue, cl_mem image,
                    const size_t *region, cl_uint num_events_in_wait_list,
                    const cl_event *event_wait_list,
                    cl_event *event) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clEnqueueFillImage>(
+  return Profiler::exec<API::clEnqueueFillImage>(
       command_queue, image, fill_color, origin, region, num_events_in_wait_list,
       event_wait_list, event);
 }
@@ -745,7 +746,7 @@ clEnqueueMigrateMemObjects(cl_command_queue command_queue,
                            cl_uint num_events_in_wait_list,
                            const cl_event *event_wait_list,
                            cl_event *event) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clEnqueueMigrateMemObjects>(
+  return Profiler::exec<API::clEnqueueMigrateMemObjects>(
       command_queue, num_mem_objects, mem_objects, flags,
       num_events_in_wait_list, event_wait_list, event);
 }
@@ -755,7 +756,7 @@ clEnqueueMarkerWithWaitList(cl_command_queue command_queue,
                             cl_uint num_events_in_wait_list,
                             const cl_event *event_wait_list,
                             cl_event *event) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clEnqueueMarkerWithWaitList>(
+  return Profiler::exec<API::clEnqueueMarkerWithWaitList>(
       command_queue, num_events_in_wait_list, event_wait_list, event);
 }
 
@@ -764,14 +765,14 @@ clEnqueueBarrierWithWaitList(cl_command_queue command_queue,
                              cl_uint num_events_in_wait_list,
                              const cl_event *event_wait_list,
                              cl_event *event) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clEnqueueBarrierWithWaitList>(
+  return Profiler::exec<API::clEnqueueBarrierWithWaitList>(
       command_queue, num_events_in_wait_list, event_wait_list, event);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY void *CL_API_CALL
 clGetExtensionFunctionAddressForPlatform(
     cl_platform_id platform, const char *func_name) CL_API_SUFFIX__VERSION_1_2 {
-  return He::Profiler::exec<He::API::clGetExtensionFunctionAddressForPlatform>(
+  return Profiler::exec<API::clGetExtensionFunctionAddressForPlatform>(
       platform, func_name);
 }
 
@@ -784,7 +785,7 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_command_queue
                                        const cl_queue_properties *properties,
                                        cl_int *errcode_ret)
         CL_API_SUFFIX__VERSION_2_0 {
-  return He::Profiler::exec<He::API::clCreateCommandQueueWithProperties>(
+  return Profiler::exec<API::clCreateCommandQueueWithProperties>(
       context, device, properties, errcode_ret);
 }
 
@@ -792,7 +793,7 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_mem CL_API_CALL
 clCreatePipe(cl_context context, cl_mem_flags flags, cl_uint pipe_packet_size,
              cl_uint pipe_max_packets, const cl_pipe_properties *properties,
              cl_int *errcode_ret) CL_API_SUFFIX__VERSION_2_0 {
-  return He::Profiler::exec<He::API::clCreatePipe>(context, flags, pipe_packet_size,
+  return Profiler::exec<API::clCreatePipe>(context, flags, pipe_packet_size,
                                            pipe_max_packets, properties,
                                            errcode_ret);
 }
@@ -801,33 +802,33 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clGetPipeInfo(cl_mem pipe, cl_pipe_info param_name, size_t param_value_size,
               void *param_value,
               size_t *param_value_size_ret) CL_API_SUFFIX__VERSION_2_0 {
-  return He::Profiler::exec<He::API::clGetPipeInfo>(pipe, param_name, param_value_size,
+  return Profiler::exec<API::clGetPipeInfo>(pipe, param_name, param_value_size,
                                             param_value, param_value_size_ret);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY void *CL_API_CALL
 clSVMAlloc(cl_context context, cl_svm_mem_flags flags, size_t size,
            cl_uint alignment) CL_API_SUFFIX__VERSION_2_0 {
-  return He::Profiler::exec<He::API::clSVMAlloc>(context, flags, size, alignment);
+  return Profiler::exec<API::clSVMAlloc>(context, flags, size, alignment);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY void CL_API_CALL
 clSVMFree(cl_context context, void *svm_pointer) CL_API_SUFFIX__VERSION_2_0 {
-  return He::Profiler::exec<He::API::clSVMFree>(context, svm_pointer);
+  return Profiler::exec<API::clSVMFree>(context, svm_pointer);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_sampler CL_API_CALL
 clCreateSamplerWithProperties(cl_context context,
                               const cl_sampler_properties *normalized_coords,
                               cl_int *errcode_ret) CL_API_SUFFIX__VERSION_2_0 {
-  return He::Profiler::exec<He::API::clCreateSamplerWithProperties>(
+  return Profiler::exec<API::clCreateSamplerWithProperties>(
       context, normalized_coords, errcode_ret);
 }
 
 extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clSetKernelArgSVMPointer(cl_kernel kernel, cl_uint arg_index,
                          const void *arg_value) CL_API_SUFFIX__VERSION_2_0 {
-  return He::Profiler::exec<He::API::clSetKernelArgSVMPointer>(kernel, arg_index,
+  return Profiler::exec<API::clSetKernelArgSVMPointer>(kernel, arg_index,
                                                        arg_value);
 }
 
@@ -835,7 +836,7 @@ extern "C" [[gnu::visibility("default")]] CL_API_ENTRY cl_int CL_API_CALL
 clSetKernelExecInfo(cl_kernel kernel, cl_kernel_exec_info param_name,
                     size_t param_value_size,
                     const void *param_value) CL_API_SUFFIX__VERSION_2_0 {
-  return He::Profiler::exec<He::API::clSetKernelExecInfo>(
+  return Profiler::exec<API::clSetKernelExecInfo>(
       kernel, param_name, param_value_size, param_value);
 }
 
@@ -847,7 +848,7 @@ clEnqueueSVMFree(cl_command_queue command_queue, cl_uint num_svm_pointers,
                  void *user_data, cl_uint num_events_in_wait_list,
                  const cl_event *event_wait_list,
                  cl_event *event) CL_API_SUFFIX__VERSION_2_0 {
-  return He::Profiler::exec<He::API::clEnqueueSVMFree>(
+  return Profiler::exec<API::clEnqueueSVMFree>(
       command_queue, num_svm_pointers, svm_pointers, pfn_free_func, user_data,
       num_events_in_wait_list, event_wait_list, event);
 }
@@ -858,7 +859,7 @@ clEnqueueSVMMemcpy(cl_command_queue command_queue, cl_bool blocking_copy,
                    cl_uint num_events_in_wait_list,
                    const cl_event *event_wait_list,
                    cl_event *event) CL_API_SUFFIX__VERSION_2_0 {
-  return He::Profiler::exec<He::API::clEnqueueSVMMemcpy>(
+  return Profiler::exec<API::clEnqueueSVMMemcpy>(
       command_queue, blocking_copy, dst_ptr, src_ptr, size,
       num_events_in_wait_list, event_wait_list, event);
 }
@@ -869,7 +870,7 @@ clEnqueueSVMMemFill(cl_command_queue command_queue, void *svm_ptr,
                     cl_uint num_events_in_wait_list,
                     const cl_event *event_wait_list,
                     cl_event *event) CL_API_SUFFIX__VERSION_2_0 {
-  return He::Profiler::exec<He::API::clEnqueueSVMMemFill>(
+  return Profiler::exec<API::clEnqueueSVMMemFill>(
       command_queue, svm_ptr, pattern, pattern_size, size,
       num_events_in_wait_list, event_wait_list, event);
 }
@@ -880,7 +881,7 @@ clEnqueueSVMMap(cl_command_queue command_queue, cl_bool blocking_map,
                 cl_uint num_events_in_wait_list,
                 const cl_event *event_wait_list,
                 cl_event *event) CL_API_SUFFIX__VERSION_2_0 {
-  return He::Profiler::exec<He::API::clEnqueueSVMMap>(
+  return Profiler::exec<API::clEnqueueSVMMap>(
       command_queue, blocking_map, flags, svm_ptr, size,
       num_events_in_wait_list, event_wait_list, event);
 }
@@ -890,7 +891,7 @@ clEnqueueSVMUnmap(cl_command_queue command_queue, void *svm_ptr,
                   cl_uint num_events_in_wait_list,
                   const cl_event *event_wait_list,
                   cl_event *event) CL_API_SUFFIX__VERSION_2_0 {
-  return He::Profiler::exec<He::API::clEnqueueSVMUnmap>(
+  return Profiler::exec<API::clEnqueueSVMUnmap>(
       command_queue, svm_ptr, num_events_in_wait_list, event_wait_list, event);
 }
 

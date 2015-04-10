@@ -1,4 +1,4 @@
-#include "utils/Enums.h"
+#include "clap/utils/Enums.h"
 
 #include <CL/cl.h>
 
@@ -10,7 +10,7 @@
 #define BITFIELD(X) \
   if(value & X) { out << (first?"":"|") << #X; first = false; value ^= X; }
 
-namespace he {
+namespace clap {
 namespace Constant {
 
 std::ostream& operator<< (std::ostream &out, const cl_mem_flags& e){
@@ -116,5 +116,5 @@ std::ostream& operator<< ( std::ostream &out, const cl_command_queue_properties&
 }
 
 } // namespace Constant
-} // namespace He
+} // namespace clap
 

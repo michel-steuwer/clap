@@ -187,7 +187,7 @@ struct Profiler::Hook<API::clCreateProgramWithSource> {
         for(unsigned i = 0; i < count; ++i)
           source += strings[i];
       }
-      using namespace He::hashing::sha1;
+      using namespace clap::hashing::sha1;
       get().programs[ret].hash = hash((void*)source.data(), source.length());
     }
     return ret;

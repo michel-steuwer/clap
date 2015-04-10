@@ -7,12 +7,12 @@
 #include "CL/cl.h"
 #include "CL/cl_deprecated.h"
 
-#include "Stat.h"
-#include "utils/ScopeGuard.h"
-#include "utils/function_traits.h"
-#include "feature.h"
+#include "clap/Stat.h"
+#include "clap/utils/ScopeGuard.h"
+#include "clap/utils/function_traits.h"
+#include "clap/feature.h"
 
-namespace He {
+namespace clap {
 /**
  * API and vendor implementation forward class.
  * Defines the prototypes of the OpenCL API functions and get pointers on the
@@ -22,7 +22,7 @@ struct API {
   /// @brief Enum containing all API functions
   enum Fct { 
 #define CLFUNC(X) X,
-#include<clfunc.def>
+#include "clap/clfunc.def"
 #undef CLFUNC
     API_FUNCTION_COUNT
   };
@@ -61,12 +61,12 @@ struct API {
 #define CLFUNC(X) \
   template<> \
   struct API::lookup<API:: X > { using type = decltype(&:: X ); };
-#include<clfunc.def>
+#include "clap/clfunc.def"
 #undef CLFUNC
 
 // ICD loader dispatch is defined in the source file
 #define CLFUNC(X) template<> API::fctptr_t<API:: X > API::getVendorImpl<API:: X >();
-#include<clfunc.def>
+#include "clfunc.def"
 #undef CLFUNC
 
 // Sink: time and forward
@@ -76,7 +76,7 @@ inline API::return_t<fct> API::exec(Args&&... args)
 #ifdef TRACK_API_CALLS
   // start timer
   const auto start = std::chrono::high_resolution_clock::now();
-  He::ScopeGuard guard{[=]{
+  ScopeGuard guard{[=]{
     // stop timer
     auto end = std::chrono::high_resolution_clock::now();
     // register call
@@ -87,5 +87,5 @@ inline API::return_t<fct> API::exec(Args&&... args)
   return API::getVendorImpl<fct>()(std::forward<Args>(args)...);
 }
 
-} // namespace He
+} // namespace clap
 

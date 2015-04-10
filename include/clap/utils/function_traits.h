@@ -6,7 +6,7 @@
 
 #include <tuple>
 
-namespace He {
+namespace clap {
 namespace detail {
 // Helper struct to extract function traits
 template <typename T>
@@ -55,5 +55,5 @@ template <typename T>
 struct function_traits<const volatile T&&> : public function_traits<T> {};
 
 } // namespace detail
-} // namespace He
+} // namespace clap
 

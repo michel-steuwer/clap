@@ -1,8 +1,8 @@
-#include "utils/hash.h"
+#include "clap/utils/hash.h"
 #include <cstdint>
 #include <cstring>
 
-namespace He {
+namespace clap {
 namespace hashing {
 namespace sha1 {
 namespace detail {
@@ -97,4 +97,4 @@ std::string hash(const void* src, const size_t length)
 }
 } // namespace sha1
 } // namespace hashing
-} // namespace he
+} // namespace clap

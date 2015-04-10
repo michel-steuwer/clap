@@ -5,9 +5,9 @@
  * downcast_switch: takes a list of functions and try to downcast for each.
  */
 #pragma once
-#include <utils/function_traits.h>
+#include <clap/utils/function_traits.h>
 
-namespace He {
+namespace clap {
 // isa<T>
 template <class X, class Y>
 inline bool isa(const Y &Val) 
@@ -33,7 +33,7 @@ struct DownCastSwitch {
   template<typename Fct, typename... Fcts>
   struct COR {
     static bool apply(T* ptr, Fct fct, Fcts... fcts) {
-      using fct_t = He::detail::function_traits<Fct>;
+      using fct_t = detail::function_traits<Fct>;
       using arg_t = typename fct_t::template arg<0>::type;
       if(auto c_ptr = dyn_cast<typename std::remove_pointer<arg_t>::type>(ptr)) {
         fct(c_ptr);
@@ -46,7 +46,7 @@ struct DownCastSwitch {
   template<typename Fct>
   struct COR<Fct> {
     static bool apply(T *ptr, Fct &&fct){
-      using fct_t = He::detail::function_traits<Fct>;
+      using fct_t = detail::function_traits<Fct>;
       using arg_t = typename fct_t::template arg<0>::type;
       if(auto c_ptr = dyn_cast<typename std::remove_pointer<arg_t>::type>(ptr)) {
         fct(c_ptr);
@@ -69,5 +69,5 @@ detail::DownCastSwitch<T> downcast_switch(T* t) {
   return detail::DownCastSwitch<T>(t);
 }
 
-} // namespace He
+} // namespace clap
 

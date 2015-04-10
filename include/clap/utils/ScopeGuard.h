@@ -2,7 +2,7 @@
 
 #include <functional>
 
-namespace He {
+namespace clap {
 class ScopeGuard {
   std::function<void()> f;
 public: 

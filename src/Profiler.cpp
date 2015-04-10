@@ -1,4 +1,3 @@
-#include <Profiler.h>
 #include <ctime>
 #include <cassert>
 #include <fstream>
@@ -7,11 +6,12 @@
 #include <cstdlib>
 #include <type_traits>
 
-#include "Formatter/XML.h"
-#include "utils/Enums.h"
-#include "utils/Casting.h"
+#include "clap/Profiler.h"
+#include "clap/Formatter/XML.h"
+#include "clap/utils/Enums.h"
+#include "clap/utils/Casting.h"
 
-using namespace He;
+using namespace clap;
 
 template<typename T>
 using base_type = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
@@ -231,7 +231,7 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::MemOperation& obj) {
 xml::ostream& operator<< (xml::ostream& xml, const Stat::CommandQueue& obj) {
   return xml
     << xml::tag("queue")
-    << xml::attr("properties") << he::Constant::cl_command_queue_properties{obj.properties}
+    << xml::attr("properties") << Constant::cl_command_queue_properties{obj.properties}
     << obj.device_id
     << (const base_type<decltype(obj)>::attribute_t&) obj
     << xml::endtag();
@@ -267,7 +267,7 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::Memory& obj) {
   return xml
     << xml::tag("mem_object")
     << xml::attr("type") << obj.type
-    << xml::attr("flag") << he::Constant::cl_mem_flags{obj.flags}
+    << xml::attr("flag") << Constant::cl_mem_flags{obj.flags}
     << xml::attr("size") << obj.size
     << (const base_type<decltype(obj)>::attribute_t&) obj
     << xml::tag("actions") << obj.operations
@@ -302,7 +302,7 @@ void Profiler::dumpLogs()
   char mbstr[100];
   std::strftime(mbstr, sizeof(mbstr), "%Y-%m-%d %H:%M:%S", std::localtime(&t));
 
-  if(std::getenv("HELIUM_SAVE_XML")){
+  if(std::getenv("CLAP_SAVE_XML")){
     logfile.open (std::string{mbstr}+".xml");
   }
 

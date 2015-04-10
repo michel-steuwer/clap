@@ -1,20 +1,20 @@
 #pragma once
 
 #include <map>
-#include "Stat.h"
-#include "API.h"
-#include "feature.h"
+#include "clap/Stat.h"
+#include "clap/API.h"
+#include "clap/feature.h"
 
 #ifdef DEBUG_TRACK_OVERHEAD
 #include <chrono>
-#include "utils/ScopeGuard.h"
+#include "clap/utils/ScopeGuard.h"
 #endif
 
 #ifdef TRACK_PROGRAMS
-#include "utils/hash.h"
+#include "clap/utils/hash.h"
 #endif
 
-namespace He {
+namespace clap {
 
 struct Profiler {
   /// @brief wrapper to time overhead in profiling mode
@@ -93,13 +93,13 @@ struct Profiler::Hook {
 };
 
 // Specializations
-#include "Spec/creational.inc"
-#include "Spec/queue.inc"
+#include "clap/Spec/creational.inc"
+#include "clap/Spec/queue.inc"
 #ifdef TRACK_REFCOUNT
-#include "Spec/refcount.inc"
+#include "clap/Spec/refcount.inc"
 #endif
-#include "Spec/compiler.inc"
-#include "Spec/misc.inc"
+#include "clap/Spec/compiler.inc"
+#include "clap/Spec/misc.inc"
 
-} // namespace He
+} // namespace clap
 

@@ -1,7 +1,12 @@
+// [Standard includes]
+#include <iostream>
+
+// [External includes]
 extern "C" {
 #include <dlfcn.h>
 }
-#include <iostream>
+
+// [Internal includes]
 #include "clap/API.h"
 
 using namespace clap;
@@ -17,14 +22,14 @@ template<> API::fctptr_t<API:: X > API::getVendorImpl<API:: X >() { \
   static auto _nat = reinterpret_cast<safe_dlsym_t>(dlsym)(RTLD_NEXT, #X); \
   if(_nat == nullptr) std::clog << "Linker lookup failed for " << API::funcname(API:: X) << std::endl; \
   return _nat; }
-#include "clap/clfunc.def"
+#include "clap/clfunc.inc"
 #undef CLFUNC 
 
 // enum to string util
 const std::string& API::funcname(Fct fct) {
   static const std::string names[API::API_FUNCTION_COUNT+1] = {
 #define CLFUNC(X) #X,
-#include "clap/clfunc.def"
+#include "clap/clfunc.inc"
 #undef CLFUNC
     "marker"
   };

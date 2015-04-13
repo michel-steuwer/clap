@@ -8,16 +8,33 @@
 #include <clap/utils/function_traits.h>
 
 namespace clap {
-// isa<T>
+
+/// @brief Check if an object is of type T
+/// @tparam X Type to check against
+/// @tparam Y Source type (deduced)
+/// @param Val Object to convert
+/// @return true if Val is a X
+/// @note read LLVM 'RTTI' doc to know how to make it work for
+///  other classes
 template <class X, class Y>
 inline bool isa(const Y &Val) 
 { return X::classof(&Val); }
 
-// dyn_cast<T>
+/// @brief Try to convert a From to a To
+/// @tparam To Type to convert to
+/// @tparam From Source type (deduced)
+/// @param v Object to convert
+/// @return v converted to a To* or null
+/// @note read LLVM 'RTTI' doc to know how to make it work for
+///  other classes
 template <class To, class From>
 inline To* dyn_cast(From &v) 
 { return To::classof(v) ? static_cast<To*>(v) : nullptr; }
 
+/// @cond HIDDEN_SYMBOLS
+/// Implementation details
+
+/// @brief Same thing as dyn_cast but for const objects
 template <class To, class From>
 inline const To* dyn_cast(const From &v) 
 { return To::classof(v) ? static_cast<const To*>(v) : nullptr; }
@@ -33,7 +50,7 @@ struct DownCastSwitch {
   template<typename Fct, typename... Fcts>
   struct COR {
     static bool apply(T* ptr, Fct fct, Fcts... fcts) {
-      using fct_t = detail::function_traits<Fct>;
+      using fct_t = function_traits<Fct>;
       using arg_t = typename fct_t::template arg<0>::type;
       if(auto c_ptr = dyn_cast<typename std::remove_pointer<arg_t>::type>(ptr)) {
         fct(c_ptr);
@@ -46,7 +63,7 @@ struct DownCastSwitch {
   template<typename Fct>
   struct COR<Fct> {
     static bool apply(T *ptr, Fct &&fct){
-      using fct_t = detail::function_traits<Fct>;
+      using fct_t = function_traits<Fct>;
       using arg_t = typename fct_t::template arg<0>::type;
       if(auto c_ptr = dyn_cast<typename std::remove_pointer<arg_t>::type>(ptr)) {
         fct(c_ptr);
@@ -64,9 +81,19 @@ struct DownCastSwitch {
 };
 } // namespace detail
 
-template<typename T>
-detail::DownCastSwitch<T> downcast_switch(T* t) {
-  return detail::DownCastSwitch<T>(t);
+/// @endcond
+
+/// @brief Try to downcast an object and execute a function if successful
+/// @tparam Object The type of the object to downcast
+/// @tparam A list of callable types taking a single argument
+/// @param t Object to downcast
+/// @param cases The list of cases
+/// @return False if all cases fail, true otherwise
+template<typename Object, typename... Cases>
+bool downcast_switch(Object* t, Cases&&... cases) 
+{
+  return detail::DownCastSwitch<Object>(t)
+    (std::forward<Cases>(cases)...);
 }
 
 } // namespace clap

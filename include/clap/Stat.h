@@ -19,8 +19,13 @@ namespace Stat {
 /// @brief Any object with a unique identifier
 template <typename T>
 struct Identifiable {
+  /// @brief Counter for instances of T
   static int count;
+
+  /// @brief A unique identifier for this counter
   int id;
+  
+  /// @brief Constructor: sets and increments the id
   Identifiable() { id = ++count; }  
 };
 template <typename T> int Identifiable<T>::count( 0 );
@@ -58,20 +63,24 @@ struct Timeable {
 
 /// Any object in a command queue
 struct Enqueued {
+  /// @brief ID of the queued used for the operation.
   cl_command_queue queue_id;
 };
 
 /// Any object with a size
 struct Sizeable {
+  /// @brief Size of the object
   std::size_t size = 0;
 };
 
 
 // ******************************************************************
-// Properties wrapper. 
-// Exposes inheritance through CRTP and provides an alias for the TL.
+/// @brief Properties wrapper. 
+/// @details Exposes inheritance through CRTP and provides an alias for the TL.
+/// @tparam T The list of properties to inherit from
 template<typename... T>
 struct AttributeSet : public T... {
+  /// @brief Alias of the type list
   using attribute_t = AttributeSet<T...>;
 };
 
@@ -82,11 +91,21 @@ struct AttributeSet : public T... {
 
 /// @brief An NDRange, used to specify local/global sizes and offsets.
 struct NDRange {
+  /// @brief dimensionality
   unsigned int dim = 0;
+  /// @brief Size in the x dimension
   size_t x = 0;
+  /// @brief Size in the y dimension
   size_t y = 0;
+  /// @brief Size in the z dimension
   size_t z = 0;
+
+  /// @brief Default constructor, creates an empty range
   NDRange(){}
+
+  /// @brief Initialize a range from an array
+  /// @param dim Size of the array
+  /// @param p Array of sizes
   NDRange(unsigned int dim, const size_t *p)
     : dim{p?dim:0}
   {
@@ -101,15 +120,30 @@ struct NDRange {
 /// @brief An enqueued memory operation.
 struct MemOperation: public AttributeSet<Identifiable<MemOperation>, 
                                          Enqueued __Timeable> {
-  enum class Type { Read, Write, Copy_scr, Copy_dst } type;
+  /// @brief Type of memory operation
+  /// @var type Memory operation type
+  enum class Type { 
+    Read,      /// < A read operation from host to device
+    Write,     /// < A write operation from host to device
+    Copy_scr,  /// < The source of a copy operation
+    Copy_dst   /// < The destination of a copy operation
+  } type;
+  
   cl_mem _mem;
+  
   bool blocking;
 };
 
 #ifdef TRACK_KERNEL_ARGUMENTS
 /// @brief Kernel argument.
 struct KernelArgument: public AttributeSet<Sizeable> {
-  enum class Type { MemObject, Data, Local /*, Sampler*/ } type;
+  /// @brief Type of kernel argument
+  enum class Type { 
+    MemObject, 
+    Data, 
+    Local
+    /*, Sampler*/ 
+  } type;
 
   KernelArgument(Type t, const size_t s)
    : type(t)
@@ -205,25 +239,42 @@ struct Memory final : public AttributeSet<Identifiable<Memory> __RefCounted > {
 
 /// @brief cl_kernel stats.
 struct Kernel final : public AttributeSet<Identifiable<Kernel> __RefCounted> {
+  /// @brief OpenCL handle on the program containing this kernel
   cl_program program_id = nullptr; // FK
+
+  /// @brief Name of the kernel function
   std::string name;
+  
+  /// @brief List of instances
   std::vector<KernelInstance> instances;
+
 #ifdef TRACK_KERNEL_ARGUMENTS
+  /// @brief List of arguments
+  /// @note Only available if TRACK_KERNEL_ARGUMENTS is set
   std::vector<std::unique_ptr<KernelArgument>> arguments;
 #endif
 };
 
 /// @brief cl_program stats.
 struct Program final : public AttributeSet<Identifiable<Program> __RefCounted> {
+  /// @brief Options used when the program was built.
   std::string build_options;
+
 #ifdef TRACK_PROGRAMS
+  /// @brief Hash of the device code (SHA-1 by default)
+  /// @note Only available if TRACK_PROGRAMS is set
   std::string hash;
 #endif
 };
 
 /// @brief cl_command_queue stats.
 struct CommandQueue final : public AttributeSet<Identifiable<CommandQueue> __RefCounted> {
+  /// @brief OpenCL handle representing this oject
   cl_device_id device_id = nullptr; // FK
+
+  /// @brief Properties used for construction
+  /// @warning OpenCL 2.0 introduced default properties for command queues which cannot
+  ///  be queried. We need to find a way to do this.
   cl_command_queue_properties properties;
 };
 
@@ -233,6 +284,8 @@ struct Device final : public AttributeSet<Identifiable<Device>
                                           __RefCounted /* Only reference counted since OCL 1.2 */
 #endif
                                           > {
+
+  /// @brief Name as returned by CL_DEVICE_NAME
   std::string name;
 };
 
@@ -254,6 +307,7 @@ struct HostFunction {
 
 #ifdef DEBUG_TRACK_OVERHEAD
   /// @brief Total time spent executing this function (including hooks).
+  /// @note Only available if DEBUG_TRACK_OVERHEAD is set.
   double total_time = 0;
 #endif
 

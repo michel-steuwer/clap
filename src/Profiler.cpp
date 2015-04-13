@@ -1,4 +1,6 @@
-#include <ctime>
+// [Standard includes]
+// This is only needed because gcc doesn't support the C++11 time utils
+#include <ctime> 
 #include <cassert>
 #include <fstream>
 #include <iostream>
@@ -6,6 +8,7 @@
 #include <cstdlib>
 #include <type_traits>
 
+// [Internal includes]
 #include "clap/Profiler.h"
 #include "clap/Formatter/XML.h"
 #include "clap/utils/Enums.h"
@@ -146,7 +149,7 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::Argument::Data& value) 
 
 xml::ostream& operator<< (xml::ostream& xml, const Stat::KernelArgument& value) {
   using namespace Stat::Argument;
-  if(!downcast_switch(&value)(
+  if(!downcast_switch(&value,
     [&](const MemObject* arg) { xml << *arg; },
     [&](const Local* arg)     { xml << *arg; },
     [&](const Data* arg)      { xml << *arg; }))
@@ -292,8 +295,6 @@ xml::ostream& operator<< (xml::ostream& xml, const std::vector<V>& value) {
 // This one has to leak since there might be some OpenCL stuff in the 
 // global context as well
 Profiler *Profiler::m_p = new Profiler();
-
-Profiler::Profiler(){}
 
 void Profiler::dumpLogs()
 {

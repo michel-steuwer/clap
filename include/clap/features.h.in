@@ -1,8 +1,0 @@
-// File containing the set of enabled features.
-// Using a config file instead of add_definition in the CMakeList triggers
-// a compilation of the affected files only
-#define PROFILER_VERSION_MAJOR ${PROJECT_MAJOR}
-#define PROFILER_VERSION_MINOR ${PROJECT_MINOR}
-#define PROFILER_VERSION_PATCH ${PROJECT_PATCH} 
-
-${FEATURES}

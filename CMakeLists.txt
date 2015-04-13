@@ -5,10 +5,10 @@ set(PROJECT_MINOR 0)
 set(PROJECT_PATCH 0)
 
 include_directories(include/)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 
 set(LIBRARY_NAME HeliumPP)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fvisibility=hidden -Wall -Wextra -pedantic") 
+set(CMAKE_CXX_FLAGS 
+    "${CMAKE_CXX_FLAGS} -std=c++11 -fvisibility=hidden -Wall -Wextra -pedantic -Werror") 
 
 set(FEATURES "")
 
@@ -57,7 +57,8 @@ if(OPENCL_ALLOW_DEPRECATED)
   add_definitions( -DCL_USE_DEPRECATED_OPENCL_1_0_APIS -DOPENCL_ALLOW_DEPRECATED )
 endif()
 
-configure_file(include/clap/features.h.in include/clap/feature.h)
+configure_file(include/clap/feature.h.in 
+               ${CMAKE_SOURCE_DIR}/include/clap/feature.h)
 
 ADD_DEFINITIONS(-D_GNU_SOURCE)
 ADD_DEFINITIONS(-DVERBOSE)

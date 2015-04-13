@@ -1,0 +1,18 @@
+/// @brief Profiler major version
+#define PROFILER_VERSION_MAJOR ${PROJECT_MAJOR}
+/// @brief Profiler minor version
+#define PROFILER_VERSION_MINOR ${PROJECT_MINOR}
+/// @brief Profiler revision version
+#define PROFILER_VERSION_PATCH ${PROJECT_PATCH} 
+
+/**
+ * @authors CLAP Development team
+ * @mainpage OpenCL Advanced Profiling Toolkit
+ */ 
+
+/**
+ * @namespace clap
+ * @brief Main namespace for the profiler objects
+ */
+
+${FEATURES}

@@ -8,7 +8,7 @@ include_directories(include/)
 
 set(LIBRARY_NAME HeliumPP)
 set(CMAKE_CXX_FLAGS 
-    "${CMAKE_CXX_FLAGS} -std=c++11 -fvisibility=hidden -Wall -Wextra -pedantic -Werror") 
+    "${CMAKE_CXX_FLAGS} -std=c++11 -fvisibility=hidden -Wall -Wextra -pedantic") 
 
 set(FEATURES "")
 

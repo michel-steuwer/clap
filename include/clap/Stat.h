@@ -1,14 +1,18 @@
 #pragma once
 
-#ifdef TRACK_KERNEL_ARGUMENTS
-#include <cstdint>
-#include <algorithm>
-#endif
-
-#include <CL/cl.h>
+// [Standard includes]
 #include <memory>
 #include <vector>
+#include <string>
+#ifdef TRACK_KERNEL_ARGUMENTS
+# include <cstdint>
+# include <algorithm>
+#endif
 
+// [External includes]
+#include <CL/cl.h>
+
+// [Internal includes]
 #include "clap/feature.h"
 #include "clap/utils/Casting.h"
 namespace Stat {

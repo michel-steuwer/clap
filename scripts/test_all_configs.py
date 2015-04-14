@@ -32,8 +32,17 @@ def main(argv):
   # dictionary of all options
   options={
     'CMAKE_CXX_COMPILER':[
-      '${HOME}/local/compilers/gcc/latest/bin/g++',
-      '${HOME}/local/compilers/clang/latest/bin/clang++'
+    '/scratch/s0841430/compilers/gcc-4.9.2/bin/g++',
+    '/scratch/s0841430/compilers/gcc-4.8.4/bin/g++',
+    #'/scratch/s0841430/compilers/gcc-4.7.4/bin/g++',
+    #'/scratch/s0841430/compilers/gcc-4.6.4/bin/g++',
+    #'/scratch/s0841430/compilers/gcc-4.5.4/bin/g++',
+    #'/scratch/s0841430/compilers/clang-3.0/bin/clang++',
+    #'/scratch/s0841430/compilers/clang-3.1/bin/clang++',
+    #'/scratch/s0841430/compilers/clang-3.2/bin/clang++',
+    #'/scratch/s0841430/compilers/clang-3.3/bin/clang++',
+    '/scratch/s0841430/compilers/clang-3.4.2/bin/clang++',
+    '/scratch/s0841430/compilers/clang-3.5.2/bin/clang++'
     ],
     'OPENCL_VERSION':[
       '1.0','1.1','1.2','2.0'
@@ -77,7 +86,7 @@ def main(argv):
 
   # build all configs
   if threaded:
-    executor = concurrent.futures.ProcessPoolExecutor(max_workers=6)
+    executor = concurrent.futures.ProcessPoolExecutor(max_workers=36)
     futures = [executor.submit(build,info,threaded,path) for info in infos]
     concurrent.futures.wait(futures)
     infos = [future.result() for future in futures]

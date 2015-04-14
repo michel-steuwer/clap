@@ -236,9 +236,6 @@ struct Memory final : public AttributeSet<Identifiable<Memory> __RefCounted > {
 
   /// @brief Allocation flags.
   cl_mem_flags flags = 0;
-
-  /// @brief List of memory operations using this buffer.
-  std::vector<MemOperation> operations;
 };
 
 /// @brief cl_kernel stats.
@@ -249,9 +246,6 @@ struct Kernel final : public AttributeSet<Identifiable<Kernel> __RefCounted> {
   /// @brief Name of the kernel function
   std::string name;
   
-  /// @brief List of instances
-  std::vector<KernelInstance> instances;
-
 #ifdef TRACK_KERNEL_ARGUMENTS
   /// @brief List of arguments
   /// @note Only available if TRACK_KERNEL_ARGUMENTS is set

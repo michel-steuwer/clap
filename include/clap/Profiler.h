@@ -2,6 +2,7 @@
 
 // [Standard includes]
 #include <map>
+#include <list>
 #ifdef DEBUG_TRACK_OVERHEAD
 # include <chrono>
 #endif
@@ -93,8 +94,14 @@ private:
   /// @brief List of Kernel objects
   std::map<cl_kernel, Stat::Kernel> kernels;
 
+  /// @brief List of all instances
+  std::list<Stat::KernelInstance> instances;
+
   /// @brief List of Memory objects
   std::map<cl_mem, Stat::Memory> memobjs;
+
+  /// @brief List of all memory operations
+  std::list<Stat::MemOperation> memops;
 
   /// @brief List of Program objects
   std::map<cl_program, Stat::Program> programs;

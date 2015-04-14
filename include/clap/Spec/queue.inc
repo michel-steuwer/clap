@@ -64,7 +64,7 @@ struct Profiler::Hook<API::clEnqueueNDRangeKernel> {
       for(const auto& ptr : kernel_stat.arguments)
         inst.arguments.emplace_back(ptr?ptr->clone():nullptr);
 #endif
-      get().kernels[kernel].instances.emplace_back(std::move(inst));
+      get().instances.emplace_back(std::move(inst));
     }
     return ret;
   }
@@ -98,7 +98,7 @@ struct Profiler::Hook<API::clEnqueueReadBuffer> {
     }
 
     if(ret == CL_SUCCESS) 
-      get().memobjs[buffer].operations.push_back(op);
+      get().memops.push_back(op);
     return ret;
   }
 };
@@ -131,7 +131,7 @@ struct Profiler::Hook<API::clEnqueueWriteBuffer> {
     }
 
     if(ret == CL_SUCCESS) 
-      get().memobjs[buffer].operations.push_back(op);
+      get().memops.push_back(op);
     return ret;
   }
 };

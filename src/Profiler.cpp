@@ -28,6 +28,9 @@ xml::ostream& operator<< (xml::ostream&, const std::map<K,V>&);
 template<typename V>
 xml::ostream& operator<< (xml::ostream&, const std::vector<V>&);
 
+template<typename V>
+xml::ostream& operator<< (xml::ostream&, const std::list<V>&);
+
 // OpenCL object
 xml::ostream& operator<< (xml::ostream& xml, const cl_event event) {
   cl_ulong submit, queued, start, end;
@@ -160,7 +163,8 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::KernelArgument& value) 
 
 xml::ostream& operator<< (xml::ostream& xml, const Stat::KernelInstance& obj) {
   xml 
-    << xml::tag("instance")
+    << xml::tag("kernel_instance")
+    << xml::attr("kernel_id") << Profiler::get().getKernel(obj.kernel_id).id
     << (const base_type<decltype(obj)>::attribute_t&) obj
     << xml::tag("offset") << obj.offset << xml::endtag()
     << xml::tag("global") << obj.global << xml::endtag()
@@ -186,7 +190,6 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::Kernel& kernel) {
     << xml::attr("name") << kernel.name
     << kernel.program_id
     << (const base_type<decltype(kernel)>::attribute_t&) kernel
-    << xml::tag("instances") << kernel.instances << xml::endtag() 
     << xml::endtag();
 }
 
@@ -224,7 +227,7 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::Memory::Type& obj) {
 
 xml::ostream& operator<< (xml::ostream& xml, const Stat::MemOperation& obj) {
   return xml
-    << xml::tag("action")
+    << xml::tag("memory_operation")
     << xml::attr("type") << obj.type
     << xml::attr("blocking") << (obj.blocking?"true":"false")
     << (const base_type<decltype(obj)>::attribute_t&) obj
@@ -273,7 +276,6 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::Memory& obj) {
     << xml::attr("flag") << Constant::cl_mem_flags{obj.flags}
     << xml::attr("size") << obj.size
     << (const base_type<decltype(obj)>::attribute_t&) obj
-    << xml::tag("actions") << obj.operations
     << xml::endtag("mem_object");
 }
 
@@ -286,6 +288,12 @@ xml::ostream& operator<< (xml::ostream& xml, const std::map<K,V>& value) {
 
 template<typename V>
 xml::ostream& operator<< (xml::ostream& xml, const std::vector<V>& value) {
+  for(const auto& i : value) xml << i;
+  return xml;
+}
+
+template<typename V>
+xml::ostream& operator<< (xml::ostream& xml, const std::list<V>& value) {
   for(const auto& i : value) xml << i;
   return xml;
 }
@@ -308,7 +316,7 @@ void Profiler::dumpLogs()
   }
 
   xml::ostream xml = {logfile.is_open()?logfile:std::cout};
-  xml << xml::tag("profile") << xml::attr("when") << mbstr
+  xml << xml::tag("trace") << xml::attr("date") << mbstr
       << xml::attr("profiler_version") << PROFILER_VERSION_MAJOR << '.'
       << PROFILER_VERSION_MINOR << '.' << PROFILER_VERSION_PATCH
       << xml::attr("ocl_version")
@@ -323,12 +331,15 @@ void Profiler::dumpLogs()
 #else
 #error Cannot match OpenCL version
 #endif
-      << xml::tag("devices") << devices << xml::endtag()
-      << xml::tag("contexts") << contexts << xml::endtag()
-      << xml::tag("queues") << com_queues << xml::endtag()
-      << xml::tag("programs") << programs << xml::endtag()
-      << xml::tag("kernels") << kernels << xml::endtag()
-      << xml::tag("mem_objects") << memobjs << xml::endtag();
+      // Those have to be in the same order as the XML schema
+      << devices 
+      << contexts
+      << com_queues
+      << programs 
+      << kernels
+      << instances
+      << memobjs
+      << memops;
 
 #ifdef TRACK_API_CALLS
   xml << xml::tag("API");

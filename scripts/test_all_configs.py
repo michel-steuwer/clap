@@ -15,10 +15,12 @@ class BuildInfo:
     self.config = conf
 
 def build(info,threaded,path):
-  command = 'cmake ' + info.config + ' ' + path + ' && make -j4'
+  prefix = ''
   if threaded:
+    prefix = 'INPLACE_HEADERS'
     dirpath = tempfile.mkdtemp()
     os.chdir(dirpath)
+  command = 'cmake ' + prefix + ' ' + info.config + ' ' + path + ' && make -j4'
   ts = time.time()
   info.ret = sp.call(command, shell=True)
   info.time = time.time() - ts

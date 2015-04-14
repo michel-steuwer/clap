@@ -57,8 +57,16 @@ if(OPENCL_ALLOW_DEPRECATED)
   add_definitions( -DCL_USE_DEPRECATED_OPENCL_1_0_APIS -DOPENCL_ALLOW_DEPRECATED )
 endif()
 
-configure_file(include/clap/feature.h.in 
-               ${CMAKE_SOURCE_DIR}/include/clap/feature.h)
+
+option(INPLACE_HEADERS "Generate the header in the source tree." ON)
+if(INPLACE_HEADERS)
+  configure_file(include/clap/feature.h.in 
+                 ${CMAKE_SOURCE_DIR}/include/clap/feature.h)
+else()
+  configure_file(include/clap/feature.h.in
+                 ${CMAKE_CURRENT_BINARY_DIR}/include/clap/feature.h)
+  include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+endif()
 
 ADD_DEFINITIONS(-D_GNU_SOURCE)
 ADD_DEFINITIONS(-DVERBOSE)

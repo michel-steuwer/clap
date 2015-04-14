@@ -16,3 +16,8 @@
  */
 
 
+  #define TRACK_REFCOUNT
+  #define TRACK_EVENTS
+  #define TRACK_API_CALLS
+  #define TRACK_KERNEL_ARGUMENTS
+  #define TRACK_PROGRAMS

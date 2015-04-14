@@ -37,7 +37,7 @@ struct Profiler {
 #ifdef DEBUG_TRACK_OVERHEAD
     // start timer
     const auto start = std::chrono::high_resolution_clock::now();
-    He::ScopeGuard guard{[=]{
+    ScopeGuard guard{[=]{
       // stop timer
       auto end = std::chrono::high_resolution_clock::now();
       // register call

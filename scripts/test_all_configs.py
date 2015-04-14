@@ -17,7 +17,7 @@ class BuildInfo:
 def build(info,threaded,path):
   prefix = ''
   if threaded:
-    prefix = 'INPLACE_HEADERS'
+    prefix = '-DINPLACE_HEADERS=OFF'
     dirpath = tempfile.mkdtemp()
     os.chdir(dirpath)
   command = 'cmake ' + prefix + ' ' + info.config + ' ' + path + ' && make -j4'
@@ -36,13 +36,13 @@ def main(argv):
     'CMAKE_CXX_COMPILER':[
     '/scratch/s0841430/compilers/gcc-4.9.2/bin/g++',
     '/scratch/s0841430/compilers/gcc-4.8.4/bin/g++',
-    #'/scratch/s0841430/compilers/gcc-4.7.4/bin/g++',
-    #'/scratch/s0841430/compilers/gcc-4.6.4/bin/g++',
-    #'/scratch/s0841430/compilers/gcc-4.5.4/bin/g++',
-    #'/scratch/s0841430/compilers/clang-3.0/bin/clang++',
-    #'/scratch/s0841430/compilers/clang-3.1/bin/clang++',
-    #'/scratch/s0841430/compilers/clang-3.2/bin/clang++',
-    #'/scratch/s0841430/compilers/clang-3.3/bin/clang++',
+    '/scratch/s0841430/compilers/gcc-4.7.4/bin/g++',
+    '/scratch/s0841430/compilers/gcc-4.6.4/bin/g++',
+    '/scratch/s0841430/compilers/gcc-4.5.4/bin/g++',
+    '/scratch/s0841430/compilers/clang-3.0/bin/clang++',
+    '/scratch/s0841430/compilers/clang-3.1/bin/clang++',
+    '/scratch/s0841430/compilers/clang-3.2/bin/clang++',
+    '/scratch/s0841430/compilers/clang-3.3/bin/clang++',
     '/scratch/s0841430/compilers/clang-3.4.2/bin/clang++',
     '/scratch/s0841430/compilers/clang-3.5.2/bin/clang++'
     ],

@@ -283,8 +283,14 @@ struct Device final : public AttributeSet<Identifiable<Device>
 #endif
                                           > {
 
-  /// @brief Name as returned by CL_DEVICE_NAME
-  std::string name;
+  /// @brief OpenCL device handle
+  /// Unlike the other objects, devices are not created directly. Instead
+  /// the profiler inspects the context creation and tracks the associated
+  /// devices.
+  cl_device_id device_id;
+
+  /// @brief context id
+  cl_context context_id;
 };
 
 /// @brief cl_context stats.

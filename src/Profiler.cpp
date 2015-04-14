@@ -1,12 +1,14 @@
 // [Standard includes]
-// This is only needed because gcc doesn't support the C++11 time utils
-#include <ctime> 
 #include <cassert>
 #include <fstream>
 #include <iostream>
 #include <iomanip>
-#include <cstdlib>
 #include <type_traits>
+#include <algorithm>
+
+#include <ctime> // < This is only needed because gcc doesn't fully support chrono
+#include <cctype>
+#include <cstdlib>
 
 // [Internal includes]
 #include "clap/Profiler.h"
@@ -116,12 +118,12 @@ xml::ostream& operator<< (xml::ostream &out, const Stat::AttributeSet<Ts...> &c)
 
 // Stat serialization
 xml::ostream& operator<< (xml::ostream& xml, const Stat::NDRange& value) {
-  xml << xml::tag("NDRange");
+  // The TAG is ommitted
   if(value.dim) xml << xml::attr("dim") << value.dim ;
   if(value.x) xml << xml::attr("x") << value.x;
   if(value.y) xml << xml::attr("y") << value.y; 
   if(value.z) xml << xml::attr("z") << value.z; 
-  return xml << xml::endtag();
+  return xml;
 }
 
 #ifdef TRACK_KERNEL_ARGUMENTS
@@ -166,19 +168,15 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::KernelInstance& obj) {
     << xml::tag("kernel_instance")
     << xml::attr("kernel_id") << Profiler::get().getKernel(obj.kernel_id).id
     << (const base_type<decltype(obj)>::attribute_t&) obj
-    << xml::tag("offset") << obj.offset << xml::endtag()
-    << xml::tag("global") << obj.global << xml::endtag()
-    << xml::tag("local") << obj.local << xml::endtag();
+    << xml::tag("offset_range") << obj.offset << xml::endtag()
+    << xml::tag("global_range") << obj.global << xml::endtag()
+    << xml::tag("local_range") << obj.local << xml::endtag();
 
 #ifdef TRACK_KERNEL_ARGUMENTS  
-  xml << xml::tag("arguments");
-  int i = 0;
-  for(const auto &argptr : obj.arguments) {
+  for(unsigned int i = 0; i < obj.arguments.size(); ++i) 
     xml << xml::tag("argument") 
-        << xml::attr("index") << i++ << *(argptr.get())
+        << xml::attr("index") << i++ << *(obj.arguments[i].get())
         << xml::endtag();
-  }
-  xml << xml::endtag();
 #endif
 
   return xml << xml::endtag();
@@ -244,9 +242,21 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::CommandQueue& obj) {
 }
 
 xml::ostream& operator<< (xml::ostream& xml, const Stat::Device& obj) {
+  // Print the device name as well
+  auto _clGetDeviceInfo = API::getVendorImpl<API::clGetDeviceInfo>();
+  std::string name;
+  size_t length = 0;
+  _clGetDeviceInfo(const_cast<cl_device_id>(obj.device_id),CL_DEVICE_NAME,0,nullptr,&length);
+  name.resize(length);
+  _clGetDeviceInfo(const_cast<cl_device_id>(obj.device_id),CL_DEVICE_NAME,length,&name[0],nullptr);
+
+  // for some reason some devices still have garbage after their names
+  auto filter = [](char c){ return !(std::isprint(c) || c == '\n' || c == '\t'); };
+  name.erase(std::remove_if(std::begin(name), std::end(name), filter), std::end(name));  
+
   return xml
     << xml::tag("device")
-    << xml::attr("name") << obj.name
+    << xml::attr("name") << name
     << (const base_type<decltype(obj)>::attribute_t&) obj
     << xml::endtag();
 }
@@ -354,8 +364,8 @@ void Profiler::dumpLogs()
   xml << xml::endtag(/*profile*/);
 }
 
-// global scope guard to trigger the log dump
 namespace {
+// global scope guard to trigger the log dump
 struct Guard {
   ~Guard() { Profiler::get().dumpLogs(); }
 } __guard; 

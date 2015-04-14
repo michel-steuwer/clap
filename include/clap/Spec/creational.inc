@@ -50,14 +50,10 @@ struct Profiler::Hook<API::clCreateContext> {
       *err = _err; 
 
     if(_err == CL_SUCCESS) {
+      // since we have a device list, register the devices
       for(unsigned int i = 0; i < num_devices; ++i) {
-        auto _clGetDeviceInfo = API::getVendorImpl<API::clGetDeviceInfo>();
-        std::string name;
-        size_t length = 0;
-        _clGetDeviceInfo(const_cast<cl_device_id>(devices[i]),CL_DEVICE_NAME,0,nullptr,&length);
-        name.resize(length+1);
-        _clGetDeviceInfo(const_cast<cl_device_id>(devices[i]),CL_DEVICE_NAME,length,&name[0],nullptr);
-        get().devices[devices[i]].name = std::move(name);
+        get().devices[devices[i]].device_id = devices[i];
+        get().devices[devices[i]].context_id = ret;
       }
     }
     return ret;
@@ -79,21 +75,17 @@ struct Profiler::Hook<API::clCreateContextFromType> {
       *err = _err;
 
     if(_err == CL_SUCCESS) { 
-      // get device list
+      // We don't have the device list, but we can query it
       size_t ret_size = 0;
       API::exec<API::clGetContextInfo>
         (ret,CL_CONTEXT_DEVICES,0,nullptr,&ret_size);
       std::vector<cl_device_id> devs(ret_size/sizeof(cl_device_id));
       API::getVendorImpl<API::clGetContextInfo>()
         (ret,CL_CONTEXT_DEVICES,ret_size,&devs[0],nullptr);
+      // register the devices
       for(auto dev : devs) {
-        auto _clGetDeviceInfo = API::getVendorImpl<API::clGetDeviceInfo>();
-        std::string name;
-        size_t length = 0;
-        _clGetDeviceInfo(dev,CL_DEVICE_NAME,0,nullptr,&length);
-        name.resize(length+1);
-        _clGetDeviceInfo(dev,CL_DEVICE_NAME,length,&name[0],nullptr);
-        get().devices[dev].name = std::move(name);
+        get().devices[dev].device_id = dev;
+        get().devices[dev].context_id = ret;
       }
     }
     return ret;

@@ -1,7 +1,8 @@
+/// @file Some deprecated functions disappeared from the Khronos headers.
 #include "CL/cl.h"
 
 #if defined CL_USE_DEPRECATED_OPENCL_1_0_APIS && defined CL_VERSION_1_1 
-#warning CL_USE_DEPRECATED_OPENCL_1_0_APIS is defined. These APIs are unsupported and untested in OpenCL 1.1!
+#warning CL_USE_DEPRECATED_OPENCL_1_0_APIS is defined
 /* 
  *  WARNING:
  *     This API introduces mutable state into the OpenCL implementation. It has been REMOVED

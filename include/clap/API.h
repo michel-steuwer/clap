@@ -10,7 +10,7 @@
 #include "CL/cl_deprecated.h"
 
 // [Local includes]
-#include "clap/Stat.h"
+#include "clap/Stat/API.h"
 #include "clap/utils/ScopeGuard.h"
 #include "clap/utils/function_traits.h"
 #include "clap/feature.h"
@@ -70,7 +70,7 @@ struct API {
 #ifdef TRACK_API_CALLS
   /// @brief Profile information for the host functions
   /// @note Only enabled if TRACK_API_CALLS is set
-  static std::array<Stat::HostFunction, API::API_FUNCTION_COUNT> profile;
+  static std::array<clap::Stat::HostFunction, API::API_FUNCTION_COUNT> profile;
 #endif
 
   /// @brief API call sink

@@ -10,42 +10,34 @@ set(LIBRARY_NAME Clap)
 set(CMAKE_CXX_FLAGS 
     "${CMAKE_CXX_FLAGS} -std=c++11 -fvisibility=hidden -Wall -Wextra -pedantic") 
 
-set(FEATURES "")
-
 option(DEBUG_TRACK_OVERHEAD "Measure the overheads of the profiler's hooks." OFF)
 if(DEBUG_TRACK_OVERHEAD)
-  set(FEATURES "${FEATURES}
-  #define DEBUG_TRACK_OVERHEAD")
+  add_definitions( -DDEBUG_TRACK_OVERHEAD )
 endif()
 
 option(TRACK_REFCOUNT "Track retain/realease for OpenCL objects." OFF)
 if(TRACK_REFCOUNT)
-  set(FEATURES "${FEATURES}
-  #define TRACK_REFCOUNT")
+  add_definitions( -DTRACK_REFCOUNT )
 endif()
 
 option(TRACK_EVENTS "Force timing in all queues and force events to all actions." OFF)
 if(TRACK_EVENTS)
-  set(FEATURES "${FEATURES}
-  #define TRACK_EVENTS")
+  add_definitions( -DTRACK_EVENTS )
 endif()
 
 option(TRACK_API_CALLS "Time each OpenCL function call and their number of instances." OFF)
 if(TRACK_API_CALLS OR DEBUG_TRACK_OVERHEAD)
-  set(FEATURES "${FEATURES}
-  #define TRACK_API_CALLS")
+  add_definitions( -DTRACK_API_CALLS )
 endif()
 
 option(TRACK_KERNEL_ARGUMENTS "Record the kernel arguments for each instance." OFF)
 if(TRACK_KERNEL_ARGUMENTS)
-  set(FEATURES "${FEATURES}
-  #define TRACK_KERNEL_ARGUMENTS")
+  add_definitions( -DTRACK_KERNEL_ARGUMENTS )
 endif()
 
 option(TRACK_PROGRAMS "Track program sources or binaries." OFF)
 if(TRACK_PROGRAMS)
-  set(FEATURES "${FEATURES}
-  #define TRACK_PROGRAMS")
+  add_definitions( -DTRACK_PROGRAMS )
 endif()
 
 set(OPENCL_VERSION "1.2" CACHE STRING "OpenCL version")

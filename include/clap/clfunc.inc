@@ -1,3 +1,5 @@
+// Auto-generated file: do not edit
+
 #ifdef CL_VERSION_1_0
 CLFUNC(clGetPlatformIDs)
 CLFUNC(clGetPlatformInfo)

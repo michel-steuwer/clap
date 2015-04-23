@@ -15,6 +15,7 @@
 // [Internal includes]
 #include "clap/feature.h"
 #include "clap/utils/Casting.h"
+
 namespace Stat {
 
 // ******************************************************************
@@ -23,16 +24,37 @@ namespace Stat {
 /// @brief Any object with a unique identifier
 template <typename T>
 struct Identifiable {
-  /// @brief Counter for instances of T
-  static int count;
-
   /// @brief A unique identifier for this counter
-  int id;
+  std::size_t id;
   
   /// @brief Constructor: sets and increments the id
-  Identifiable() { id = ++count; }  
+  Identifiable() : id(++count) { }  
+
+  Identifiable(const Identifiable & other)
+    : id{other.id} {}
+
+private:
+  /// @brief Counter for instances of T 
+  static int count;
 };
 template <typename T> int Identifiable<T>::count( 0 );
+
+/// @brief Objects with unique identifiers.
+/// @detail Unique identifiers are monotonically increasing, they are
+///   used to find the relative ordering for operations of different types.
+struct UniqueIdentifiable {
+  /// @brief A unique identifier
+  const std::size_t id;
+
+  // @brief Constructor: sets and increments the id
+  UniqueIdentifiable() : id(++getCount()) { }  
+
+private:
+  std::size_t &getCount() {
+    static std::size_t count = 0;
+    return count;
+  }
+};
 
 #ifdef TRACK_REFCOUNT
 /// @brief Any reference counted object
@@ -55,10 +77,6 @@ struct RefCounted {
 struct Timeable {
   cl_event _event = nullptr;
   bool forced_event = false;
-  long queued = 0;
-  long submit = 0;
-  long start = 0;
-  long end = 0;
 };
 # define __Timeable , Timeable
 #else
@@ -123,17 +141,18 @@ struct NDRange {
 
 /// @brief An enqueued memory operation.
 struct MemOperation: public AttributeSet<Identifiable<MemOperation>, 
+                                         UniqueIdentifiable,
                                          Enqueued __Timeable> {
   /// @brief Type of memory operation
   /// @var type Memory operation type
   enum class Type { 
     Read,      /// < A read operation from host to device
     Write,     /// < A write operation from host to device
-    Copy_scr,  /// < The source of a copy operation
+    Copy_src,  /// < The source of a copy operation
     Copy_dst   /// < The destination of a copy operation
   } type;
   
-  cl_mem _mem;
+  cl_mem mem_id;
   
   bool blocking;
 };
@@ -211,8 +230,11 @@ struct Local final: public detail::Cloneable<Local> {
 
 
 /// @brief An enqueued kernel instance.
-struct KernelInstance : public AttributeSet<Identifiable<KernelInstance>, 
-                                            Enqueued __Timeable> {
+struct KernelInstance final
+  : public AttributeSet<Identifiable<KernelInstance>, 
+                        UniqueIdentifiable,
+                        Enqueued __Timeable> {
+  
   /// @brief Kernel ID of the launched kernel (FK)
   cl_kernel kernel_id = nullptr;
   NDRange offset;
@@ -227,7 +249,9 @@ struct KernelInstance : public AttributeSet<Identifiable<KernelInstance>,
 // OpenCL objects
 
 /// @brief cl_mem stats.
-struct Memory final : public AttributeSet<Identifiable<Memory> __RefCounted > {
+struct Memory final 
+  : public AttributeSet<Identifiable<Memory> __RefCounted > {
+
   /// @brief Type of memory object.
   enum class Type { Buffer, Image, Subbuffer } type;
 
@@ -239,7 +263,9 @@ struct Memory final : public AttributeSet<Identifiable<Memory> __RefCounted > {
 };
 
 /// @brief cl_kernel stats.
-struct Kernel final : public AttributeSet<Identifiable<Kernel> __RefCounted> {
+struct Kernel final 
+  : public AttributeSet<Identifiable<Kernel> __RefCounted> {
+
   /// @brief OpenCL handle on the program containing this kernel
   cl_program program_id = nullptr; // FK
 
@@ -254,7 +280,9 @@ struct Kernel final : public AttributeSet<Identifiable<Kernel> __RefCounted> {
 };
 
 /// @brief cl_program stats.
-struct Program final : public AttributeSet<Identifiable<Program> __RefCounted> {
+struct Program final 
+  : public AttributeSet<Identifiable<Program> __RefCounted> {
+  
   /// @brief Options used when the program was built.
   std::string build_options;
 
@@ -266,8 +294,10 @@ struct Program final : public AttributeSet<Identifiable<Program> __RefCounted> {
 };
 
 /// @brief cl_command_queue stats.
-struct CommandQueue final : public AttributeSet<Identifiable<CommandQueue> __RefCounted> {
-  /// @brief OpenCL handle representing this oject
+struct CommandQueue final 
+  : public AttributeSet<Identifiable<CommandQueue> __RefCounted> {
+  
+  /// @brief OpenCL handle representing this object
   cl_device_id device_id = nullptr; // FK
 
   /// @brief Properties used for construction
@@ -277,11 +307,12 @@ struct CommandQueue final : public AttributeSet<Identifiable<CommandQueue> __Ref
 };
 
 /// @brief cl_device_id stats.
-struct Device final : public AttributeSet<Identifiable<Device> 
+struct Device final 
+  : public AttributeSet<Identifiable<Device> 
 #ifdef CL_VERSION_1_2
-                                          __RefCounted /* Only reference counted since OCL 1.2 */
+                         __RefCounted /* Only reference counted since OCL 1.2 */
 #endif
-                                          > {
+                         > {
 
   /// @brief OpenCL device handle
   /// Unlike the other objects, devices are not created directly. Instead
@@ -302,7 +333,7 @@ struct Context final : public AttributeSet<Identifiable<Context> __RefCounted> {
 
 #ifdef TRACK_API_CALLS
 /// @brief Stats for the host functions.
-struct HostFunction {
+struct HostFunction final {
   /// @brief Number of invocations.
   unsigned int instances = 0;
 

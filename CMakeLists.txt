@@ -6,7 +6,7 @@ set(PROJECT_PATCH 0)
 
 include_directories(include/)
 
-set(LIBRARY_NAME HeliumPP)
+set(LIBRARY_NAME Clap)
 set(CMAKE_CXX_FLAGS 
     "${CMAKE_CXX_FLAGS} -std=c++11 -fvisibility=hidden -Wall -Wextra -pedantic") 
 

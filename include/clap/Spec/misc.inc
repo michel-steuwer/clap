@@ -1,4 +1,6 @@
 #ifdef TRACK_KERNEL_ARGUMENTS
+namespace clap {
+  
 template<>
 struct Profiler::Hook<API::clSetKernelArg> {
   static inline int exec( cl_kernel kernel,
@@ -36,6 +38,8 @@ struct Profiler::Hook<API::clSetKernelArg> {
     return ret;
   }
 };
+
+} // namespace clap
 #endif
 
 

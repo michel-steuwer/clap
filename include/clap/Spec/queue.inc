@@ -1,3 +1,5 @@
+namespace clap {
+
 // helpers
 #ifdef TRACK_EVENTS
 namespace {
@@ -27,7 +29,6 @@ namespace {
 #endif
 
 // Queue API
-
 template<>
 struct Profiler::Hook<API::clEnqueueNDRangeKernel> {
   static inline cl_int exec(cl_command_queue command_queue,
@@ -86,6 +87,7 @@ struct Profiler::Hook<API::clEnqueueReadBuffer> {
     op.type = Stat::MemOperation::Type::Read;
     op.blocking = blocking_read;
     op.queue_id = command_queue;
+    op.mem_id = buffer;
     
     cl_int ret;
     {
@@ -98,7 +100,7 @@ struct Profiler::Hook<API::clEnqueueReadBuffer> {
     }
 
     if(ret == CL_SUCCESS) 
-      get().memops.push_back(op);
+      get().memops.emplace_back(std::move(op));
     return ret;
   }
 };
@@ -119,6 +121,7 @@ struct Profiler::Hook<API::clEnqueueWriteBuffer> {
     op.type = Stat::MemOperation::Type::Write;
     op.blocking = blocking;
     op.queue_id = command_queue;
+    op.mem_id = buffer;
 
     cl_int ret;
     {
@@ -131,8 +134,52 @@ struct Profiler::Hook<API::clEnqueueWriteBuffer> {
     }
 
     if(ret == CL_SUCCESS) 
-      get().memops.push_back(op);
+      get().memops.emplace_back(std::move(op));
     return ret;
   }
 };
+
+template<> 
+struct Profiler::Hook<API::clEnqueueCopyBuffer> {
+  static inline cl_int exec(cl_command_queue command_queue,
+                            cl_mem src_buffer,
+                            cl_mem dst_buffer,
+                            size_t src_offset,
+                            size_t dst_offset,
+                            size_t cb,
+                            cl_uint num_events_in_wait_list,
+                            const cl_event *event_wait_list,
+                            cl_event *event)
+  {
+    Stat::MemOperation op; 
+    op.type = Stat::MemOperation::Type::Copy_src;
+    op.blocking = false;
+    op.queue_id = command_queue;
+    op.mem_id = src_buffer;
+
+    cl_int ret;
+    {
+#ifdef TRACK_EVENTS
+      EventGuard e{event,op}; 
+#endif
+      ret = API::exec<API::clEnqueueCopyBuffer>
+        (command_queue,src_buffer,dst_buffer,src_offset,dst_offset,
+         cb,num_events_in_wait_list,event_wait_list,event);
+    }
+
+    if(ret == CL_SUCCESS) { 
+      Stat::MemOperation op_dst; 
+      op_dst.type = Stat::MemOperation::Type::Copy_dst;
+      op_dst.blocking = false;
+      op_dst.queue_id = command_queue;
+      op_dst.mem_id = dst_buffer;
+      op_dst._event = op._event;
+
+      get().memops.emplace_back(std::move(op));
+    }
+    return ret;
+  }
+};
+
+} // namespace clap
 

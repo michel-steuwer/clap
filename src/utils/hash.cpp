@@ -6,7 +6,7 @@ namespace clap {
 namespace hashing {
 namespace sha1 {
 namespace detail {
-  constexpr std::uint32_t rol(const std::uint32_t value, const std::uint32_t steps)
+  constexpr std::uint32_t r(const std::uint32_t value, const std::uint32_t steps)
   { return ((value << steps) | (value >> (32 - steps))); }
 
   void hash(std::uint32_t* digest, std::uint32_t* w)
@@ -17,31 +17,31 @@ namespace detail {
     auto d = digest[3];
     auto e = digest[4];
 
-#define sha1macro(func,val) \
-    const auto t = rol(a, 5) + (func) + e + val + w[round]; \
+#define sha1(func,val) \
+    const auto t = r(a, 5) + (func) + e + val + w[round]; \
     e = d; d = c; \
-    c = rol(b, 30); \
+    c = r(b, 30); \
     b = a; a = t; 
 
     int round = 0;
     for(;round < 16;++round) {
-      sha1macro((b & c) | (~b & d), 0x5a827999);
+      sha1((b & c) | (~b & d), 0x5a827999);
     }
     for(;round < 20;++round) {
-      w[round] = rol((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
-      sha1macro((b & c) | (~b & d), 0x5a827999);
+      w[round] = r((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
+      sha1((b & c) | (~b & d), 0x5a827999);
     }
     for(;round < 40;++round) {
-      w[round] = rol((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
-      sha1macro(b ^ c ^ d, 0x6ed9eba1);
+      w[round] = r((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
+      sha1(b ^ c ^ d, 0x6ed9eba1);
     }
     for(;round < 60;++round) {
-      w[round] = rol((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
-      sha1macro((b & c) | (b & d) | (c & d), 0x8f1bbcdc);
+      w[round] = r((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
+      sha1((b & c) | (b & d) | (c & d), 0x8f1bbcdc);
     }
     for(;round < 80;++round) {
-      w[round] = rol((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
-      sha1macro(b ^ c ^ d, 0xca62c1d6);
+      w[round] = r((w[round - 3] ^ w[round - 8] ^ w[round - 14] ^ w[round - 16]), 1);
+      sha1(b ^ c ^ d, 0xca62c1d6);
     }
 #undef sha1macro
 

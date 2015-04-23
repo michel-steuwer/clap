@@ -1,3 +1,9 @@
+#ifdef TRACK_PROGRAMS
+# include <fstream>
+#endif
+
+namespace clap {
+
 // Creational API
 template<>
 struct Profiler::Hook<API::clCreateKernel> {
@@ -180,10 +186,19 @@ struct Profiler::Hook<API::clCreateProgramWithSource> {
           source += strings[i];
       }
       using namespace clap::hashing::sha1;
-      get().programs[ret].hash = hash((void*)source.data(), source.length());
+      std::string proghash = hash((void*)source.data(), source.length());
+      get().programs[ret].hash = proghash;
+
+      // save the program if we were asked to
+      if(getenv("CLAP_SAVE_PROGRAM")){
+        std::ofstream out(proghash + ".cl");
+        out.write(source.c_str(), source.length()*sizeof(char));
+      }
     }
     return ret;
   }
 };
 #endif
+
+}
 

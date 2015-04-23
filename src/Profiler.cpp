@@ -63,16 +63,20 @@ xml::ostream& operator<< (xml::ostream& xml, const cl_kernel id)
 xml::ostream& operator<< (xml::ostream& xml, const cl_command_queue id) 
 { return xml << xml::attr("command_queue_id") << Profiler::get().getCommandQueue(id).id; }
 
+xml::ostream& operator<< (xml::ostream& xml, const cl_mem id) 
+{ return xml << xml::attr("mem_id") << Profiler::get().getMemory(id).id; }
+
 
 // Attributes serialization
 template<typename T>
-xml::ostream& operator<< (xml::ostream& xml, const Stat::Identifiable<T>& obj) {
-  return xml << xml::attr("id") << obj.id;
-}
+xml::ostream& operator<< (xml::ostream& xml, const Stat::Identifiable<T>& obj) 
+{ return xml << xml::attr("id") << obj.id; }
 
-xml::ostream& operator<< (xml::ostream& xml, const Stat::Enqueued& obj) {
-  return xml << obj.queue_id;
-}
+xml::ostream& operator<< (xml::ostream& xml, const Stat::UniqueIdentifiable& obj) 
+{ return xml << xml::attr("unique_id") << obj.id; }
+
+xml::ostream& operator<< (xml::ostream& xml, const Stat::Enqueued& obj) 
+{ return xml << obj.queue_id; }
 
 #ifdef TRACK_EVENTS
 xml::ostream& operator<< (xml::ostream& xml, const Stat::Timeable& obj) {
@@ -113,7 +117,6 @@ struct Impl<T, First, Args...> {
 template<typename... Ts> 
 xml::ostream& operator<< (xml::ostream &out, const Stat::AttributeSet<Ts...> &c)
 { return Impl<Stat::AttributeSet<Ts...>,Ts...>::append(out,c); }
-
 
 
 // Stat serialization
@@ -175,7 +178,7 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::KernelInstance& obj) {
 #ifdef TRACK_KERNEL_ARGUMENTS  
   for(unsigned int i = 0; i < obj.arguments.size(); ++i) 
     xml << xml::tag("argument") 
-        << xml::attr("index") << i++ << *(obj.arguments[i].get())
+        << xml::attr("index") << i << *(obj.arguments[i].get())
         << xml::endtag();
 #endif
 
@@ -205,16 +208,18 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::HostFunction& fct) {
 #endif
 
 xml::ostream& operator<< (xml::ostream& xml, const Stat::MemOperation::Type& obj) {  
+  xml << xml::attr("type"); 
   switch(obj) {
     case Stat::MemOperation::Type::Read: return xml << "read";
     case Stat::MemOperation::Type::Write: return xml << "write";
-    case Stat::MemOperation::Type::Copy_scr: return xml << "copy_from";
+    case Stat::MemOperation::Type::Copy_src: return xml << "copy_from";
     case Stat::MemOperation::Type::Copy_dst: return xml << "copy_to";
     default: return xml << "unknown";
   }
 }
 
 xml::ostream& operator<< (xml::ostream& xml, const Stat::Memory::Type& obj) {
+  xml << xml::attr("type");
   switch(obj) {
     case Stat::Memory::Type::Buffer: return xml << "buffer";
     case Stat::Memory::Type::Subbuffer: return xml << "subbuffer";
@@ -226,8 +231,9 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::Memory::Type& obj) {
 xml::ostream& operator<< (xml::ostream& xml, const Stat::MemOperation& obj) {
   return xml
     << xml::tag("memory_operation")
-    << xml::attr("type") << obj.type
+    << obj.type
     << xml::attr("blocking") << (obj.blocking?"true":"false")
+    << obj.mem_id
     << (const base_type<decltype(obj)>::attribute_t&) obj
     << xml::endtag();
 }
@@ -282,7 +288,7 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::Context& obj) {
 xml::ostream& operator<< (xml::ostream& xml, const Stat::Memory& obj) {
   return xml
     << xml::tag("mem_object")
-    << xml::attr("type") << obj.type
+    << obj.type
     << xml::attr("flag") << Constant::cl_mem_flags{obj.flags}
     << xml::attr("size") << obj.size
     << (const base_type<decltype(obj)>::attribute_t&) obj
@@ -314,7 +320,7 @@ xml::ostream& operator<< (xml::ostream& xml, const std::list<V>& value) {
 // global context as well
 Profiler *Profiler::m_p = new Profiler();
 
-void Profiler::dumpLogs()
+void Profiler::dumpLogs() const
 {
   std::ofstream logfile;
   std::time_t t = std::time(NULL);
@@ -339,7 +345,7 @@ void Profiler::dumpLogs()
 #elif defined CL_VERSION_1_0
       << "1.0"
 #else
-#error Cannot match OpenCL version
+# error Cannot match OpenCL version
 #endif
       // Those have to be in the same order as the XML schema
       << devices 
@@ -352,14 +358,12 @@ void Profiler::dumpLogs()
       << memops;
 
 #ifdef TRACK_API_CALLS
-  xml << xml::tag("API");
   for(int i = 0; i < API::API_FUNCTION_COUNT; ++i) {
     if(API::profile[i].instances>0){
-      xml << xml::tag("function") << xml::attr("name") << API::funcname((API::Fct)i)
+      xml << xml::tag("api") << xml::attr("name") << API::funcname((API::Fct)i)
           << API::profile[i] << xml::endtag();
     }
   }  
-  xml << xml::endtag(/*API*/);
 #endif
   xml << xml::endtag(/*profile*/);
 }

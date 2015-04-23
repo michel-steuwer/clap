@@ -1,3 +1,5 @@
+namespace clap {
+
 template<>
 struct Profiler::Hook<API::clBuildProgram> {
   static inline cl_int exec( cl_program program,
@@ -14,4 +16,6 @@ struct Profiler::Hook<API::clBuildProgram> {
     return ret;
   }
 };
+
+}
 

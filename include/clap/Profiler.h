@@ -48,15 +48,12 @@ struct Profiler {
     return Hook<fct>::exec(std::forward<Args>(args)...);
   }
 
-  /// @note The destructor is currently never called
-  ~Profiler();
-  
   /// @brief Singleton access
   /// @return The profiler instance
   inline static Profiler& get() { return *m_p; }
 
   /// @brief Log dump, triggered during static storage cleanup
-  void dumpLogs();
+  void dumpLogs() const;
 
   /// @brief Read-only access to device stat
   /// @param id The device ID
@@ -86,6 +83,12 @@ struct Profiler {
   inline const Stat::CommandQueue& getCommandQueue(cl_command_queue id) const
   { return com_queues.at(id); }
 
+  /// @brief Read-only access to a memory object
+  /// @param id The mem id
+  /// @return the Stat for the required MemObject
+  /// @throw std::out_of_range if the id is not valid
+  inline const Stat::Memory& getMemory(cl_mem id) const
+  { return memobjs.at(id); }
 
 private:
   /// @brief We need a helper struct to partially specialize the exec method
@@ -130,16 +133,15 @@ struct Profiler::Hook {
   }
 };
 
+} // namespace clap
+
 // Specializations
 /// @cond HIDDEN_SYMBOLS
 /// implementation details
 #include "clap/Spec/creational.inc"
 #include "clap/Spec/queue.inc"
-#ifdef TRACK_REFCOUNT
 #include "clap/Spec/refcount.inc"
-#endif
 #include "clap/Spec/compiler.inc"
 #include "clap/Spec/misc.inc"
 /// @endcond
-} // namespace clap
 

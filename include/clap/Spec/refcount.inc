@@ -1,7 +1,11 @@
+#ifdef TRACK_REFCOUNT
+
+namespace clap {
+
 // retain/release
-#define CLAP_RETAIN_RELEASE(Func,Handle,Cont)         \
+#define CLAP_RETAIN_RELEASE(Func,Handle,Cont)           \
 template<>                                              \
-struct Profiler::Hook<API::clRetain ## Func> {      \
+struct Profiler::Hook<API::clRetain ## Func> {          \
   static inline cl_int exec(Handle obj) {               \
     auto ret = API::exec<API::clRetain ## Func>(obj);   \
     if(ret== CL_SUCCESS)                                \
@@ -10,7 +14,7 @@ struct Profiler::Hook<API::clRetain ## Func> {      \
   }                                                     \
 };                                                      \
 template<>                                              \
-struct Profiler::Hook<API::clRelease ## Func> {     \
+struct Profiler::Hook<API::clRelease ## Func> {         \
   static inline cl_int exec(Handle mem) {               \
     auto ret = API::exec<API::clRelease ## Func>(mem);  \
     if(ret== CL_SUCCESS)                                \
@@ -29,4 +33,8 @@ CLAP_RETAIN_RELEASE(Device, cl_device_id, devices);
 #endif
 
 #undef CLAP_RETAIN_RELEASE
- 
+
+} // namespace clap
+
+#endif
+

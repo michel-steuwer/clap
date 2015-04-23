@@ -52,9 +52,6 @@ struct Profiler {
   /// @return The profiler instance
   inline static Profiler& get() { return *m_p; }
 
-  /// @brief Log dump, triggered during static storage cleanup
-  void dumpLogs() const;
-
   /// @brief Read-only access to device stat
   /// @param id The device ID
   /// @return the Stat for the required Device
@@ -89,6 +86,30 @@ struct Profiler {
   /// @throw std::out_of_range if the id is not valid
   inline const Stat::Memory& getMemory(cl_mem id) const
   { return memobjs.at(id); }
+
+  inline const std::map<cl_kernel, Stat::Kernel>& getKernels() const
+  { return kernels; }
+
+  inline const std::list<Stat::KernelInstance>& getInstances() const
+  { return instances; }
+
+  inline const std::map<cl_context, Stat::Context>& getContexts() const 
+  { return contexts; }
+
+  inline const std::map<cl_command_queue, Stat::CommandQueue>& getCommandQueues() const
+  { return com_queues; }
+
+  inline const std::map<cl_device_id, Stat::Device>& getDevices() const 
+  { return devices; }
+
+  inline const std::map<cl_program, Stat::Program>& getPrograms() const 
+  { return programs; }
+
+  inline const std::map<cl_mem, Stat::Memory>& getMemoryObjects() const
+  { return memobjs; }
+
+  inline const std::list<Stat::MemOperation>& getMemoryOperations() const 
+  { return memops; }
 
 private:
   /// @brief We need a helper struct to partially specialize the exec method

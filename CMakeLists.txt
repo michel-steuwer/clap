@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(HeliumPP)
 set(PROJECT_MAJOR 0)
-set(PROJECT_MINOR 0)
+set(PROJECT_MINOR 1)
 set(PROJECT_PATCH 0)
 
 include_directories(include/)

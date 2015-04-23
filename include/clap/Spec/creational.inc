@@ -34,7 +34,7 @@ struct Profiler::Hook<API::clCreateBuffer> {
       obj.type = Stat::Memory::Type::Buffer;
       obj.size = size;
       obj.flags = flags;
-      get().memobjs[ret] = obj;
+      get().memobjs.emplace(std::make_pair(ret,std::move(obj)));
     }
     return ret;
   }

@@ -173,8 +173,9 @@ struct Profiler::Hook<API::clEnqueueCopyBuffer> {
       op_dst.blocking = false;
       op_dst.queue_id = command_queue;
       op_dst.mem_id = dst_buffer;
+#ifdef TRACK_EVENTS
       op_dst._event = op._event;
-
+#endif
       get().memops.emplace_back(std::move(op));
     }
     return ret;

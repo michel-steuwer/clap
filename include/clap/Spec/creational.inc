@@ -11,12 +11,47 @@ struct Profiler::Hook<API::clCreateKernel> {
                                const char *kernel_name,
                                cl_int *errcode_ret)
   {
-    auto ret = API::exec<API::clCreateKernel>(program, kernel_name, errcode_ret);
-    get().kernels[ret].name = kernel_name;
-    get().kernels[ret].program_id = program;
+    cl_int _err;
+    auto ret = API::exec<API::clCreateKernel>(program, kernel_name, &_err);
+    if(errcode_ret != nullptr)
+      *errcode_ret = _err;
+
+    if(_err == CL_SUCCESS) {
+      get().kernels[ret].name = kernel_name;
+      get().kernels[ret].program_id = program;
+    }
     return ret;
   }
 };
+
+#ifdef CL_VERSION_1_1
+template<>
+struct Profiler::Hook<API::clCreateSubBuffer> {
+  static inline cl_mem exec(cl_mem buffer,
+                            cl_mem_flags flags,
+                            cl_buffer_create_type buffer_create_type,
+                            const void *buffer_create_info,
+                            cl_int *errcode_ret)
+  {
+    cl_int _err;
+    auto ret = API::getVendorImpl<API::clCreateSubBuffer>()
+      (buffer,flags,buffer_create_type,buffer_create_info,&_err);
+    if(errcode_ret != nullptr)
+      *errcode_ret = _err;
+
+    if(_err == CL_SUCCESS) {
+      Stat::Memory obj;
+      obj.type = Stat::Memory::Type::SubBuffer;
+      obj.size = ((cl_buffer_region*)buffer_create_info)->size;
+      obj.flags = flags;
+      obj.parent = buffer;
+      obj.offset = ((cl_buffer_region*)buffer_create_info)->origin;
+      get().memobjs.emplace(std::make_pair(ret,std::move(obj)));
+    }
+    return ret;
+  }
+};
+#endif
 
 template<>
 struct Profiler::Hook<API::clCreateBuffer> {
@@ -39,6 +74,8 @@ struct Profiler::Hook<API::clCreateBuffer> {
     return ret;
   }
 };
+
+
 
 template<>
 struct Profiler::Hook<API::clCreateContext> {
@@ -198,6 +235,42 @@ struct Profiler::Hook<API::clCreateProgramWithSource> {
     return ret;
   }
 };
+
+template<>
+struct Profiler::Hook<API::clCreateProgramWithBinary> {
+  static inline cl_program exec( cl_context context ,
+                                 cl_uint num_devices,
+                                 const cl_device_id *device_list, 
+                                 const size_t *lengths,
+                                 const unsigned char **binaries,
+                                 cl_int *binary_status,
+                                 cl_int *errcode_ret )
+  {
+    cl_int err;
+    auto ret = API::exec<API::clCreateProgramWithBinary>
+      (context,num_devices,device_list,lengths,binaries,binary_status,&err);
+    if(errcode_ret != nullptr)
+      *errcode_ret = err;
+
+    if(err == CL_SUCCESS && lengths && binaries) {
+      // the hashes are concatenated for each program
+      std::string hashes;
+      for(unsigned i = 0; i < num_devices; ++i) {
+        using namespace clap::hashing::sha1;
+        std::string proghash = hash((void*)binaries[i], lengths[i]);
+        // save the program if we were asked to
+        if(getenv("CLAP_SAVE_PROGRAM")){ 
+          std::ofstream out(proghash + ".bin");
+          out.write((const char*)binaries[i], lengths[i]);
+        }
+        hashes += proghash;
+      }
+      get().programs[ret].hash = hashes; 
+    }
+    return ret;
+  }
+};
+
 #endif
 
 }

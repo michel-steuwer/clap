@@ -221,9 +221,9 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::MemOperation::Type& obj
 xml::ostream& operator<< (xml::ostream& xml, const Stat::Memory::Type& obj) {
   xml << xml::attr("type");
   switch(obj) {
-    case Stat::Memory::Type::Buffer: return xml << "buffer";
-    case Stat::Memory::Type::Subbuffer: return xml << "subbuffer";
-    case Stat::Memory::Type::Image: return xml << "image";
+    case Stat::Memory::Type::Buffer: return xml << "Buffer";
+    case Stat::Memory::Type::SubBuffer: return xml << "BubBuffer";
+    case Stat::Memory::Type::Image: return xml << "Image";
     default: return xml << "unknown";
   };
 }
@@ -286,9 +286,14 @@ xml::ostream& operator<< (xml::ostream& xml, const Stat::Context& obj) {
 }
 
 xml::ostream& operator<< (xml::ostream& xml, const Stat::Memory& obj) {
-  return xml
+  xml
     << xml::tag("mem_object")
-    << obj.type
+    << obj.type;
+  if(obj.type == Stat::Memory::Type::SubBuffer) {
+    xml << xml::attr("parent") << Profiler::get().getMemory(obj.parent).id
+        << xml::attr("offset") << obj.offset;
+  }
+  return xml 
     << xml::attr("flag") << Constant::cl_mem_flags{obj.flags}
     << xml::attr("size") << obj.size
     << (const base_type<decltype(obj)>::attribute_t&) obj

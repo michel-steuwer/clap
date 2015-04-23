@@ -45,13 +45,19 @@ struct Memory final
   : public AttributeSet<Identifiable<Memory> __RefCounted > {
 
   /// @brief Type of memory object.
-  enum class Type { Buffer, Image, Subbuffer } type;
+  enum class Type { Buffer, Image, SubBuffer } type;
 
   /// @brief Allocated size, in bytes.
   size_t size = 0;
 
   /// @brief Allocation flags.
   cl_mem_flags flags = 0;
+
+  /// @brief Parent for sub-buffers
+  cl_mem parent = nullptr;
+
+  /// @brief Offset for sub-buffers
+  size_t offset = 0;
 };
 
 } // namespace Stat
